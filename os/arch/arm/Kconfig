@@ -74,6 +74,14 @@ config ARCH_CHIP_AMEBAD
 	---help---
 		Realtek AMEBAD architectures (ARM Cortex-M23/33).
 
+config ARCH_CHIP_RTL8730E
+	bool "Realtek rtl8730E"
+	select ARCH_CORTEXA32
+	select ARCH_HAVE_MMU
+	select ARCH_USE_MMU
+	---help---
+		Realtek RTL8730E architectures (ARM Cortex-A32).
+
 config ARCH_CHIP_STM32H745
 	bool "STMicro STM32H745"
 	select ARCH_HAVE_MPU
@@ -91,6 +99,20 @@ config ARCH_CHIP_AMEBALITE
 	---help---
 		Realtek AMEBALITE architectures (ARM Cortex-M23/33).
 
+config ARCH_CHIP_A1X
+	bool "Allwinner A1x"
+	select ARCH_CORTEXA8
+        select ARM_HAVE_NEON
+        select ARCH_HAVE_IRQPRIO
+        select ARCH_HAVE_LOWVECTORS
+        select ARCH_HAVE_FETCHADD
+        select ARCH_HAVE_SDRAM
+        depends on BOOT_RUNFROMSDRAM
+        select ARCH_HAVE_ADDRENV
+        select ARCH_NEED_ADDRENV_MAPPING
+        ---help---
+                Allwinner A1X family: A10, A10S (A12), A13 (ARM Cortex-A8)
+
 endchoice
 
 config ARCH_CHIP
@@ -104,6 +126,8 @@ config ARCH_CHIP
 	default "amebad"	if ARCH_CHIP_AMEBAD
 	default "amebalite"	if ARCH_CHIP_AMEBALITE
 	default "stm32h745"     if ARCH_CHIP_STM32H745
+	default "rtl8730e"	if ARCH_CHIP_RTL8730E
+	default "a1x"		if ARCH_CHIP_A1X
 
 comment "ARM Options"
 
@@ -177,6 +201,28 @@ config ARCH_CORTEXR4
 	select ARCH_HAVE_DABORTSTACK if !ARCH_CHIP_BCM4390X
 	select ARCH_ARMV7R_FAMILY
 
+config ARCH_CORTEXA8
+	bool
+        default n
+        select ARCH_ARMV7A
+        select ARCH_DCACHE
+        select ARCH_ICACHE
+        select ARCH_HAVE_MMU
+        select ARCH_USE_MMU
+        select ARCH_HAVE_TESTSET
+	select ARCH_ARMV7A_FAMILY
+
+config ARCH_CORTEXA32
+	bool
+	default n
+	select ARCH_HAVE_MMU
+	select ARCH_HAVE_CMNVECTOR
+	select ARCH_HAVE_DCACHE
+	select ARCH_HAVE_ICACHE
+	select ARCH_USE_MMU
+	select ARCH_HAVE_TESTSET
+	select ARCH_ARMV7A_FAMILY
+
 config ARCH_ARMV7M_FAMILY
 	bool
 	default n
@@ -189,11 +235,16 @@ config ARCH_ARMV7R_FAMILY
 	bool
 	default n
 
+config ARCH_ARMV7A_FAMILY
+	bool
+	default n
+
 config ARCH_FAMILY
 	string
 	default "armv7-m"	if ARCH_ARMV7M_FAMILY
 	default "armv7-r"	if ARCH_ARMV7R_FAMILY
 	default "armv8-m"	if ARCH_ARMV8M_FAMILY
+	default "armv7-a"	if ARCH_ARMV7A_FAMILY
 
 config ARCH_HAVE_CMNVECTOR
 	bool
@@ -383,6 +434,9 @@ endif
 if ARCH_ARMV7R_FAMILY
 source arch/arm/src/armv7-r/Kconfig
 endif
+if ARCH_ARMV7A_FAMILY
+source arch/arm/src/armv7-a/Kconfig
+endif
 if ARCH_CHIP_LM
 source arch/arm/src/tiva/Kconfig
 endif
@@ -404,10 +458,16 @@ endif
 if ARCH_CHIP_AMEBAD
 source arch/arm/src/amebad/Kconfig
 endif
+if ARCH_CHIP_RTL8730E
+source arch/arm/src/rtl8730e/Kconfig
+endif
 if ARCH_CHIP_AMEBALITE
 source arch/arm/src/amebalite/Kconfig
 endif
 if ARCH_CHIP_STM32H745
 source arch/arm/src/stm32h745/Kconfig
+endif
+if ARCH_CHIP_A1X
+source arch/arm/src/a1x/Kconfig
 endif
 endif

@@ -196,6 +196,12 @@
 #define INTSTACK_COLOR 0xdeadbeef
 #define HEAP_COLOR     'h'
 
+/* Non-atomic, but more effective modification of registers */
+
+#define modreg8(v,m,a)  putreg8((getreg8(a) & ~(m)) | ((v) & (m)), (a))
+#define modreg16(v,m,a) putreg16((getreg16(a) & ~(m)) | ((v) & (m)), (a))
+#define modreg32(v,m,a) putreg32((getreg32(a) & ~(m)) | ((v) & (m)), (a))
+
 /****************************************************************************
  * Public Types
  ****************************************************************************/
@@ -456,9 +462,11 @@ FAR int up_setup_regions(FAR struct tcb_s *tcb, uint8_t ttype);
 #ifdef CONFIG_ARCH_FPU
 void up_savefpu(uint32_t *regs);
 void up_restorefpu(const uint32_t *regs);
+void arm_fpuconfig(void);
 #else
 #define up_savefpu(regs)
 #define up_restorefpu(regs)
+#define arm_fpuconfig()
 #endif
 
 /* System timer *************************************************************/

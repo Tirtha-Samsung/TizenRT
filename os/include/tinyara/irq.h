@@ -105,6 +105,10 @@ extern "C" {
 #define EXTERN extern
 #endif
 
+#define enter_critical_section() irqsave()
+#define leave_critical_section(f) irqrestore(f)
+#define restore_critical_section()
+
 /****************************************************************************
  * Public Function Prototypes
  ****************************************************************************/

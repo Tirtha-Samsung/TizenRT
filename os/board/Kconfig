@@ -145,7 +145,16 @@ config ARCH_BOARD_RTL8721CSM
 	select ARCH_BOARD_HAVE_FLASH
 	select ARCH_HAVE_RAM_KERNEL_TEXT
 	---help---
-		Realtek RTL8721CSM-Discovery board based on the Realtek RTL8721CSM MCU.		
+		Realtek RTL8721CSM-Discovery board based on the Realtek RTL8721CSM MCU.
+
+config ARCH_BOARD_RTL8730E
+	bool "Realtek RTL8730E"
+	depends on ARCH_CHIP_RTL8730E
+	select ARCH_HAVE_BUTTONS
+	select ARCH_HAVE_IRQBUTTONS
+	select ARcH_BOARD_HAVE_FLASH
+	---help---
+		Realtek RTL8730E bord based on Arm 32-bit Cortex-A32
 
 config ARCH_BOARD_STM32H745ZI_NUCLEO
 	bool "STMicro STM32H745ZI-Nucleo board"
@@ -156,6 +165,19 @@ config ARCH_BOARD_STM32H745ZI_NUCLEO
 	select ARCH_BOARD_HAVE_FLASH
 	---help---
 		STMicro STM32H745ZI-Nucleo board based on the STMicro STM32H745ZI MCU.
+
+config ARCH_BOARD_PCDUINO_A1X
+        bool "pcDuino A10"
+        depends on ARCH_CHIP_A1X
+        select ARCH_HAVE_LEDS
+        select ARCH_HAVE_BUTTONS
+        select ARCH_HAVE_IRQBUTTONS
+        ---help---
+                This is the port of NuttX to the Allwinner A10-based pcDuino v1
+                board.  See http://www.pcduino.com/ for information about pcDuino Lite, v1,
+                and v2.  I have not compared these boards in detail, but I believe that
+                the differences are cosmetic.  This port was developed on the v1 board,
+                but the others may be compatible.
 
 endchoice
 
@@ -181,7 +203,9 @@ config ARCH_BOARD
 	default "stm32l4r9ai-disco"  if ARCH_BOARD_STM32L4R9AI_DISCO
 	default "rtl8720e"           if ARCH_BOARD_RTL8720E
 	default "rtl8721csm"         if ARCH_BOARD_RTL8721CSM
+	default "rtl8730e"           if ARCH_BOARD_RTL8730E
 	default "stm32h745zi-nucleo" if ARCH_BOARD_STM32H745ZI_NUCLEO
+	default "a1x"                if ARCH_BOARD_PCDUINO_A1X
 	
 comment "Common Board Options"
 
@@ -368,8 +392,14 @@ endif
 if ARCH_BOARD_RTL8721CSM
 source board/rtl8721csm/Kconfig
 endif
+if ARCH_BOARD_RTL8730E
+source board/rtl8730e/Kconfig
+endif
 if ARCH_BOARD_STM32H745ZI_NUCLEO
 source board/stm32h745zi-nucleo/Kconfig
+endif
+if ARCH_BOARD_PCDUINO_A1X
+source board/a1x/Kconfig
 endif
 
 source board/common/Kconfig

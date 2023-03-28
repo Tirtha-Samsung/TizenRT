@@ -121,6 +121,11 @@
 #define SCHED_PRIORITY_MIN       1
 #define SCHED_PRIORITY_IDLE      0
 
+//PORTNOTE - Added manually for v7-a builds
+#ifndef CONFIG_SMP_NCPUS
+#define CONFIG_SMP_NCPUS 1
+#endif
+
 /****************************************************************************
  * Type Declarations
  ****************************************************************************/

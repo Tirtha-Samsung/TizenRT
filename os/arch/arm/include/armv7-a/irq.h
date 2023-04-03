@@ -377,7 +377,7 @@ static inline irqstate_t up_irq_enable(void)
 
   __asm__ __volatile__
     (
-      "\tmrs    %0, cpsr\n"
+//      "\tmrs    %0, cpsr\n"
       "\tcpsie  i\n"
 #if defined(CONFIG_ARMV7A_DECODEFIQ)
       "\tcpsie  f\n"

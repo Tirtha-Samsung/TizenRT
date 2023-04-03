@@ -1,5 +1,5 @@
 /****************************************************************************
- * arch/arm/src/armv7-a/barriers.h
+ * arch/arm/src/armv7-a/up_pginitialize.c
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,29 +18,51 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-#define __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
+#include <nuttx/config.h>
+
+#include <debug.h>
+
+#include <nuttx/sched.h>
+#include <nuttx/page.h>
+
+#include "up_internal.h"
+
+#ifdef CONFIG_PAGING
+
 /****************************************************************************
- * Pre-processor Definitions
+ * Public Functions
  ****************************************************************************/
 
-/* ARMv7-A memory barriers */
+/****************************************************************************
+ * Name: up_pginitialize()
+ *
+ * Description:
+ *  Initialize the MMU for on-demand paging support..
+ *
+ * Input Parameters:
+ *   None.
+ *
+ * Returned Value:
+ *   None.  This function will crash if any errors are detected during MMU
+ *   initialization
+ *
+ * Assumptions:
+ *   - Called early in the platform initialization sequence so that no
+ *     special concurrency protection is required.
+ *
+ ****************************************************************************/
 
-#define up_isb(n) __asm__ __volatile__ ("isb " #n : : : "memory")
-#define up_dsb(n) __asm__ __volatile__ ("dsb " #n : : : "memory")
-#define up_dmb(n) __asm__ __volatile__ ("dmb " #n : : : "memory")
-#define up_nop()  __asm__ __volatile__ ("nop\n")
-#define up_sev()  __asm__ __volatile__ ("sev\n")
+void up_pginitialize(void)
+{
+  /* None needed at present.  This file is just retained in case the need
+   * arises in the future.  Nothing calls up_pginitialize() now.  If needed,
+   * if should be called early in up_boot.c to assure that all paging is
+   * ready.
+   */
+}
 
-#define ARM_DSB()  up_dsb(15)
-#define ARM_ISB()  up_isb(15)
-#define ARM_DMB()  up_dmb(15)
-#define ARM_NOP()  up_nop()
-#define ARM_SEV()  up_sev()
-
-#endif /* __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H */
+#endif /* CONFIG_PAGING */

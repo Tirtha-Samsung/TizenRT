@@ -1,5 +1,5 @@
 /****************************************************************************
- * arch/arm/src/armv7-a/barriers.h
+ * arch/arm/src/armv7-a/up_timer.h
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,29 +18,54 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-#define __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
+#ifndef __ARCH_ARM_SRC_ARMV7_A_ARM_TIMER_H
+#define __ARCH_ARM_SRC_ARMV7_A_ARM_TIMER_H
 
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
+#include <nuttx/config.h>
+#include <nuttx/timers/oneshot.h>
+
 /****************************************************************************
- * Pre-processor Definitions
+ * Public Function Prototypes
  ****************************************************************************/
 
-/* ARMv7-A memory barriers */
+#ifdef __cplusplus
+#define EXTERN extern "C"
+extern "C"
+{
+#else
+#define EXTERN extern
+#endif
 
-#define up_isb(n) __asm__ __volatile__ ("isb " #n : : : "memory")
-#define up_dsb(n) __asm__ __volatile__ ("dsb " #n : : : "memory")
-#define up_dmb(n) __asm__ __volatile__ ("dmb " #n : : : "memory")
-#define up_nop()  __asm__ __volatile__ ("nop\n")
-#define up_sev()  __asm__ __volatile__ ("sev\n")
+/****************************************************************************
+ * Name: up_timer_initialize
+ *
+ * Description:
+ *   This function initialize generic timer hardware module
+ *   and return an instance of a "lower half" timer interface.
+ *
+ * Input parameters:
+ *   freq - The clock frequency in Hz. If freq is zero, get the value
+ *     from CNTFRQ register.
+ *
+ * Returned Value:
+ *   On success, a non-NULL oneshot_lowerhalf_s is returned to the caller.
+ *   In the event of any failure, a NULL value is returned.
+ *
+ ****************************************************************************/
 
-#define ARM_DSB()  up_dsb(15)
-#define ARM_ISB()  up_isb(15)
-#define ARM_DMB()  up_dmb(15)
-#define ARM_NOP()  up_nop()
-#define ARM_SEV()  up_sev()
+#ifdef CONFIG_ARMV7A_HAVE_PTM
+struct oneshot_lowerhalf_s *up_timer_initialize(unsigned int freq);
+#else
+#  define up_timer_initialize(freq) NULL
+#endif
 
-#endif /* __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H */
+#undef EXTERN
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __ARCH_ARM_SRC_ARMV7_A_ARM_TIMER_H */

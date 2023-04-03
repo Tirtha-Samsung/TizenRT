@@ -133,7 +133,7 @@ ifeq ($(CONFIG_ARCH_FPU),y)
   ARCHCPUFLAGS += -mfpu=$(ARCHNEON)$(ARCHFPU)$(ARCHFPUD16)
 
 else
-  ARCHCPUFLAGS += -mfloat-abi=soft
+  ARCHCPUFLAGS += 
 endif
 
 ifeq ($(CONFIG_ARM_TOOLCHAIN_ARMCLANG),y)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * arch/arm/src/armv7-a/barriers.h
+ * arch/arm/src/armv7-a/up_undefinedinsn.c
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,29 +18,32 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-#define __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
+#include <nuttx/config.h>
+
+#include <stdint.h>
+#include <assert.h>
+#include <debug.h>
+
+#include <nuttx/arch.h>
+
+#include "up_internal.h"
+
 /****************************************************************************
- * Pre-processor Definitions
+ * Public Functions
  ****************************************************************************/
 
-/* ARMv7-A memory barriers */
+/****************************************************************************
+ * Name: up_undefinedinsn
+ ****************************************************************************/
 
-#define up_isb(n) __asm__ __volatile__ ("isb " #n : : : "memory")
-#define up_dsb(n) __asm__ __volatile__ ("dsb " #n : : : "memory")
-#define up_dmb(n) __asm__ __volatile__ ("dmb " #n : : : "memory")
-#define up_nop()  __asm__ __volatile__ ("nop\n")
-#define up_sev()  __asm__ __volatile__ ("sev\n")
-
-#define ARM_DSB()  up_dsb(15)
-#define ARM_ISB()  up_isb(15)
-#define ARM_DMB()  up_dmb(15)
-#define ARM_NOP()  up_nop()
-#define ARM_SEV()  up_sev()
-
-#endif /* __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H */
+uint32_t *up_undefinedinsn(uint32_t *regs)
+{
+  _alert("Undefined instruction at 0x%x\n", regs[REG_PC]);
+  CURRENT_REGS = regs;
+  PANIC();
+  return regs; /* To keep the compiler happy */
+}

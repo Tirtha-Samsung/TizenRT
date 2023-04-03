@@ -41,7 +41,7 @@
 #endif
 
 #include "mpcore.h"
-#include "arm_internal.h"
+#include "up_internal.h"
 
 #ifdef CONFIG_ARMV7A_HAVE_GICv2
 
@@ -635,7 +635,7 @@
 #ifndef __ASSEMBLY__
 
 /****************************************************************************
- * Name: arm_gic_nlines
+ * Name: up_gic_nlines
  *
  * Description:
  *   Return the number of interrupt lines supported by this GIC
@@ -649,7 +649,7 @@
  *
  ****************************************************************************/
 
-static inline unsigned int arm_gic_nlines(void)
+static inline unsigned int up_gic_nlines(void)
 {
   uint32_t regval;
   uint32_t field;
@@ -662,7 +662,7 @@ static inline unsigned int arm_gic_nlines(void)
 }
 
 /****************************************************************************
- * Name: arm_cpu_sgi
+ * Name: up_cpu_sgi
  *
  * Description:
  *   Perform a Software Generated Interrupt (SGI).  If CONFIG_SMP is
@@ -681,7 +681,7 @@ static inline unsigned int arm_gic_nlines(void)
  *
  ****************************************************************************/
 
-static inline void arm_cpu_sgi(int sgi, unsigned int cpuset)
+static inline void up_cpu_sgi(int sgi, unsigned int cpuset)
 {
   uint32_t regval;
 
@@ -709,11 +709,11 @@ extern "C"
 #endif
 
 /****************************************************************************
- * Name: arm_gic0_initialize
+ * Name: up_gic0_initialize
  *
  * Description:
  *   Perform common, one-time GIC initialization on CPU0 only.  Both
- *   arm_gic0_initialize() must be called on CPU0; arm_gic_initialize() must
+ *   up_gic0_initialize() must be called on CPU0; up_gic_initialize() must
  *   be called for all CPUs.
  *
  * Input Parameters:
@@ -724,10 +724,10 @@ extern "C"
  *
  ****************************************************************************/
 
-void arm_gic0_initialize(void);
+void up_gic0_initialize(void);
 
 /****************************************************************************
- * Name: arm_gic_initialize
+ * Name: up_gic_initialize
  *
  * Description:
  *   Perform common GIC initialization for the current CPU (all CPUs)
@@ -740,10 +740,10 @@ void arm_gic0_initialize(void);
  *
  ****************************************************************************/
 
-void arm_gic_initialize(void);
+void up_gic_initialize(void);
 
 /****************************************************************************
- * Name: arm_gic_irq_trigger
+ * Name: up_gic_irq_trigger
  *
  * Description:
  *   Set the trigger type for the specificd IRQ source and the current CPU.
@@ -760,16 +760,16 @@ void arm_gic_initialize(void);
  *
  ****************************************************************************/
 
-int arm_gic_irq_trigger(int irq, bool edge);
+int up_gic_irq_trigger(int irq, bool edge);
 
 /****************************************************************************
- * Name: arm_decodeirq
+ * Name: up_decodeirq
  *
  * Description:
- *   This function is called from the IRQ vector handler in arm_vectors.S.
+ *   This function is called from the IRQ vector handler in up_vectors.S.
  *   At this point, the interrupt has been taken and the registers have
  *   been saved on the stack.  This function simply needs to determine the
- *   the irq number of the interrupt and then to call arm_doirq to dispatch
+ *   the irq number of the interrupt and then to call up_doirq to dispatch
  *   the interrupt.
  *
  *  Input Parameters:
@@ -777,10 +777,10 @@ int arm_gic_irq_trigger(int irq, bool edge);
  *
  ****************************************************************************/
 
-uint32_t *arm_decodeirq(uint32_t *regs);
+uint32_t *up_decodeirq(uint32_t *regs);
 
 /****************************************************************************
- * Name: arm_start_handler
+ * Name: up_start_handler
  *
  * Description:
  *   This is the handler for SGI1.  This handler simply returns from the
@@ -796,11 +796,11 @@ uint32_t *arm_decodeirq(uint32_t *regs);
  ****************************************************************************/
 
 #ifdef CONFIG_SMP
-int arm_start_handler(int irq, void *context, void *arg);
+int up_start_handler(int irq, void *context, void *arg);
 #endif
 
 /****************************************************************************
- * Name: arm_pause_handler
+ * Name: up_pause_handler
  *
  * Description:
  *   This is the handler for SGI2.  It performs the following operations:
@@ -820,11 +820,11 @@ int arm_start_handler(int irq, void *context, void *arg);
  ****************************************************************************/
 
 #ifdef CONFIG_SMP
-int arm_pause_handler(int irq, void *context, void *arg);
+int up_pause_handler(int irq, void *context, void *arg);
 #endif
 
 /****************************************************************************
- * Name: arm_gic_dump
+ * Name: up_gic_dump
  *
  * Description:
  *   Dump GIC registers to the SYSLOG device
@@ -840,9 +840,9 @@ int arm_pause_handler(int irq, void *context, void *arg);
  ****************************************************************************/
 
 #ifdef CONFIG_DEBUG_IRQ_INFO
-void arm_gic_dump(const char *msg, bool all, int irq);
+void up_gic_dump(const char *msg, bool all, int irq);
 #else
-#  define arm_gic_dump(m,a,i)
+#  define up_gic_dump(m,a,i)
 #endif
 
 #undef EXTERN

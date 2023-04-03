@@ -1,5 +1,5 @@
 /****************************************************************************
- * arch/arm/src/armv7-a/addrenv.h
+ * arch/arm/src/armv7-a/up_fpuconfig.S
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,93 +18,70 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_ARMV7_A_ADDRENV_H
-#define __ARCH_ARM_SRC_ARMV7_A_ADDRENV_H
-
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
 #include <nuttx/config.h>
+#include "cp15.h"
 
-#include <sys/types.h>
-#include <stdint.h>
-
-#ifdef CONFIG_ARCH_ADDRENV
+#ifdef CONFIG_ARCH_FPU
 
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
 
-/* Aligned size of the kernel stack */
-
-#ifdef CONFIG_ARCH_KERNEL_STACK
-#  define ARCH_KERNEL_STACKSIZE ((CONFIG_ARCH_KERNEL_STACKSIZE + 7) & ~7)
-#endif
-
-/* Using a 4KiB page size, each 1MiB section maps to a PTE containing
- * 256*2KiB entries
- */
-
-#define ENTRIES_PER_L2TABLE 256
-
 /****************************************************************************
- * Inline Functions
+ * Public Symbols
  ****************************************************************************/
 
-#ifndef __ASSEMBLY__
-
-#endif /* __ASSEMBLY__ */
-
-/****************************************************************************
- * Public Data
- ****************************************************************************/
-
-#ifndef __ASSEMBLY__
-#ifdef __cplusplus
-#define EXTERN extern "C"
-extern "C"
-{
-#else
-#define EXTERN extern
-#endif
+	.globl	up_fpuconfig
+	.file	"up_fpuconfig.S"
 
 /****************************************************************************
- * Public Function Prototypes
+ * Assembly Macros
  ****************************************************************************/
 
 /****************************************************************************
- * Name: up_addrenv_create_region
+ * Private Functions
+ ****************************************************************************/
+
+	.text
+	.syntax	unified
+	.arm
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/****************************************************************************
+ * Name: up_fpuconfig
  *
  * Description:
- *   Create one memory region.
- *
- * Returned Value:
- *   On success, the number of pages allocated is returned.  Otherwise, a
- *   negated errno value is returned.
+ *   Configure the FPU.  Enables access to CP10 and CP11
  *
  ****************************************************************************/
 
-int up_addrenv_create_region(uintptr_t **list, unsigned int listlen,
-                              uintptr_t vaddr, size_t regionsize,
-                              uint32_t mmuflags);
+	.globl	up_fpuconfig
+	.type	up_fpuconfig, %function
 
-/****************************************************************************
- * Name: up_addrenv_destroy_region
- *
- * Description:
- *   Destroy one memory region.
- *
- ****************************************************************************/
+up_fpuconfig:
 
-void up_addrenv_destroy_region(uintptr_t **list, unsigned int listlen,
-                                uintptr_t vaddr, bool keep);
+	/* Enable access to CP10 and CP11 in CP15.CACR */
 
-#undef EXTERN
-#ifdef __cplusplus
-}
+	mrc		CP15_CPACR(r0)
+	orr		r0, r0, #0xf00000
+	mcr		CP15_CPACR(r0)
+
+	/* Enable access to CP10 and CP11 in CP15.NSACR */
+	/* REVISIT: Do we need to do this? */
+
+	/* Set FPEXC.EN (B30) */
+
+	fmrx		r0, fpexc
+	orr		r0, r0, #0x40000000
+	fmxr		fpexc, r0
+	bx		lr
+	.size	up_fpuconfig, . - up_fpuconfig
 #endif
-#endif /* __ASSEMBLY__ */
-
-#endif /* CONFIG_ARCH_ADDRENV */
-#endif /* __ARCH_ARM_SRC_ARMV7_A_ADDRENV_H */
+	.end

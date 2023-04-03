@@ -157,6 +157,17 @@ config ARCH_BOARD_STM32H745ZI_NUCLEO
 	---help---
 		STMicro STM32H745ZI-Nucleo board based on the STMicro STM32H745ZI MCU.
 
+config ARCH_BOARD_RTL8730E
+	bool "Realtek RTL8730E board"
+	depends on ARCH_CHIP_RTL8730E
+	select ARCH_HAVE_LEDS
+	select ARCH_HAVE_BUTTONS
+	select ARCH_HAVE_IRQBUTTONS
+	select ARCH_BOARD_HAVE_FLASH
+	select ARCH_HAVE_RAM_KERNEL_TEXT
+	---help---
+		Realtek RTL8730E board based on CortexA32 CPU.
+
 endchoice
 
 config ARCH_BOARD_ARTIK05X_FAMILY
@@ -182,6 +193,7 @@ config ARCH_BOARD
 	default "rtl8720e"           if ARCH_BOARD_RTL8720E
 	default "rtl8721csm"         if ARCH_BOARD_RTL8721CSM
 	default "stm32h745zi-nucleo" if ARCH_BOARD_STM32H745ZI_NUCLEO
+	default "rtl8730e"           if ARCH_BOARD_RTL8730E
 	
 comment "Common Board Options"
 
@@ -370,6 +382,9 @@ source board/rtl8721csm/Kconfig
 endif
 if ARCH_BOARD_STM32H745ZI_NUCLEO
 source board/stm32h745zi-nucleo/Kconfig
+endif
+if ARCH_BOARD_RTL8730E
+source board/rtl8730e/Kconfig
 endif
 
 source board/common/Kconfig

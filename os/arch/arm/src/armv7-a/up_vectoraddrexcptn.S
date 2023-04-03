@@ -1,5 +1,5 @@
 /****************************************************************************
- * arch/arm/src/armv7-a/barriers.h
+ * arch/arm/src/armv7-a/up_vectoraddrexceptn.S
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,29 +18,50 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-#define __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-
 /****************************************************************************
  * Included Files
  ****************************************************************************/
+
+#include <nuttx/config.h>
+#include <nuttx/irq.h>
+
+	.file	"up_vectoraddrexcptn.S"
 
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
 
-/* ARMv7-A memory barriers */
+/****************************************************************************
+ * Public Symbols
+ ****************************************************************************/
 
-#define up_isb(n) __asm__ __volatile__ ("isb " #n : : : "memory")
-#define up_dsb(n) __asm__ __volatile__ ("dsb " #n : : : "memory")
-#define up_dmb(n) __asm__ __volatile__ ("dmb " #n : : : "memory")
-#define up_nop()  __asm__ __volatile__ ("nop\n")
-#define up_sev()  __asm__ __volatile__ ("sev\n")
+	.globl	up_vectoraddrexcptn
 
-#define ARM_DSB()  up_dsb(15)
-#define ARM_ISB()  up_isb(15)
-#define ARM_DMB()  up_dmb(15)
-#define ARM_NOP()  up_nop()
-#define ARM_SEV()  up_sev()
+/****************************************************************************
+ * Assembly Macros
+ ****************************************************************************/
 
-#endif /* __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H */
+/****************************************************************************
+ * Private Functions
+ ****************************************************************************/
+
+	.text
+	.syntax	unified
+	.arm
+
+/****************************************************************************
+ *  Name: up_vectoraddrexcptn
+ *
+ * Description:
+ *   Shouldn't happen.  This exception handler is in a separate file from
+ *   other vector handlers because some processors do not support the
+ *   Address Exception vector.
+ *
+ ****************************************************************************/
+
+	.globl	up_vectoraddrexcptn
+	.type	up_vectoraddrexcptn, %function
+up_vectoraddrexcptn:
+	b		up_vectoraddrexcptn
+	.size	up_vectoraddrexcptn, . - up_vectoraddrexcptn
+	.end

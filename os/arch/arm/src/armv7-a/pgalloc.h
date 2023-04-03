@@ -54,7 +54,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Name: arm_pgvaddr
+ * Name: up_pgvaddr
  *
  * Description:
  *   If the page memory pool is statically mapped, then we do not have to
@@ -63,7 +63,7 @@
  *
  ****************************************************************************/
 
-static inline uintptr_t arm_pgvaddr(uintptr_t paddr)
+static inline uintptr_t up_pgvaddr(uintptr_t paddr)
 {
   DEBUGASSERT(paddr >= CONFIG_ARCH_PGPOOL_PBASE &&
               paddr < CONFIG_ARCH_PGPOOL_PEND);
@@ -72,7 +72,7 @@ static inline uintptr_t arm_pgvaddr(uintptr_t paddr)
 }
 
 /****************************************************************************
- * Name: arm_uservaddr
+ * Name: up_uservaddr
  *
  * Description:
  *   Return true if the virtual address, vaddr, lies in the user address
@@ -80,7 +80,7 @@ static inline uintptr_t arm_pgvaddr(uintptr_t paddr)
  *
  ****************************************************************************/
 
-static inline bool arm_uservaddr(uintptr_t vaddr)
+static inline bool up_uservaddr(uintptr_t vaddr)
 {
   /* Check if this address is within the range of the virtualized .bss/.data,
    * heap, or stack regions.
@@ -178,7 +178,7 @@ static inline uintptr_t get_l2_entry(uint32_t *l2table, uintptr_t vaddr)
  ****************************************************************************/
 
 /****************************************************************************
- * Name: arm_physpgaddr
+ * Name: up_physpgaddr
  *
  * Description:
  *   Check if the virtual address lies in the user data area and, if so
@@ -186,10 +186,10 @@ static inline uintptr_t get_l2_entry(uint32_t *l2table, uintptr_t vaddr)
  *
  ****************************************************************************/
 
-uintptr_t arm_physpgaddr(uintptr_t vaddr);
+uintptr_t up_physpgaddr(uintptr_t vaddr);
 
 /****************************************************************************
- * Name: arm_virtpgaddr
+ * Name: up_virtpgaddr
  *
  * Description:
  *   Check if the physical address lies in the page pool and, if so
@@ -197,7 +197,7 @@ uintptr_t arm_physpgaddr(uintptr_t vaddr);
  *
  ****************************************************************************/
 
-uintptr_t arm_virtpgaddr(uintptr_t paddr);
+uintptr_t up_virtpgaddr(uintptr_t paddr);
 
 #endif /* CONFIG_MM_PGALLOC */
 #endif /* __ARCH_ARM_SRC_ARMV7_A_PGALLOC_H */

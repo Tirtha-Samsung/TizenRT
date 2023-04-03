@@ -1,5 +1,5 @@
 /****************************************************************************
- * arch/arm/src/armv7-a/barriers.h
+ * arch/arm/src/armv7-a/up_virtpgaddr.c
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,29 +18,44 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-#define __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H
-
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
+#include <nuttx/config.h>
+
+#include "pgalloc.h"
+
+#ifdef CONFIG_MM_PGALLOC
+
 /****************************************************************************
- * Pre-processor Definitions
+ * Public Functions
  ****************************************************************************/
 
-/* ARMv7-A memory barriers */
+/****************************************************************************
+ * Name: up_virtpgaddr
+ *
+ * Description:
+ *   Check if the physical address lies in the page pool and, if so
+ *   get the mapping to the virtual address in the user data area.
+ *
+ ****************************************************************************/
 
-#define up_isb(n) __asm__ __volatile__ ("isb " #n : : : "memory")
-#define up_dsb(n) __asm__ __volatile__ ("dsb " #n : : : "memory")
-#define up_dmb(n) __asm__ __volatile__ ("dmb " #n : : : "memory")
-#define up_nop()  __asm__ __volatile__ ("nop\n")
-#define up_sev()  __asm__ __volatile__ ("sev\n")
+uintptr_t up_virtpgaddr(uintptr_t paddr)
+{
+  /* REVISIT: Not implemented correctly.  The reverse lookup from physical
+   * to virtual.  This will return a kernel accessible virtual address, but
+   * not an address usable by the user code.
+   *
+   * The correct solutions is complex and, perhaps, will never be needed.
+   */
 
-#define ARM_DSB()  up_dsb(15)
-#define ARM_ISB()  up_isb(15)
-#define ARM_DMB()  up_dmb(15)
-#define ARM_NOP()  up_nop()
-#define ARM_SEV()  up_sev()
+  if (paddr >= CONFIG_ARCH_PGPOOL_PBASE && paddr < CONFIG_ARCH_PGPOOL_PEND)
+    {
+      return paddr - CONFIG_ARCH_PGPOOL_PBASE + CONFIG_ARCH_PGPOOL_VBASE;
+    }
 
-#endif /* __ARCH_ARM_SRC_ARMV7_A_BARRIERS_H */
+  return 0;
+}
+
+#endif /* CONFIG_MM_PGALLOC */

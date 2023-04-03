@@ -72,7 +72,7 @@ extern uint32_t g_cpu3_idlestack[SMP_STACK_WORDS];
  * Description:
  *   Boot functions for each CPU (other than CPU0).  These functions set up
  *   the ARM operating mode, the initial stack, and configure co-processor
- *   registers.  At the end of the boot, arm_cpu_boot() is called.
+ *   registers.  At the end of the boot, up_cpu_boot() is called.
  *
  *   These functions are provided by the common ARMv7-A logic.
  *
@@ -101,13 +101,13 @@ void __cpu3_start(void);
 #endif
 
 /****************************************************************************
- * Name: arm_cpu_boot
+ * Name: up_cpu_boot
  *
  * Description:
  *   Continues the C-level initialization started by the assembly language
  *   __cpu[n]_start function.  At a minimum, this function needs to
  *   initialize interrupt handling and, perhaps, wait on WFI for
- *   arm_cpu_start() to issue an SGI.
+ *   up_cpu_start() to issue an SGI.
  *
  *   This function must be provided by the each ARMv7-A MCU and implement
  *   MCU-specific initialization logic.
@@ -121,7 +121,7 @@ void __cpu3_start(void);
  *
  ****************************************************************************/
 
-void arm_cpu_boot(int cpu);
+void up_cpu_boot(int cpu);
 
 #endif /* __ASSEMBLY__ */
 #endif /* CONFIG_SMP */

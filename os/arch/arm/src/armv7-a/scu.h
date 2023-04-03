@@ -148,7 +148,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- * Name: arm_enable_smp
+ * Name: up_enable_smp
  *
  * Description:
  *   Enable the SCU and make certain that current CPU is participating in
@@ -156,6 +156,6 @@
  *
  ****************************************************************************/
 
-void arm_enable_smp(int cpu);
+void up_enable_smp(int cpu);
 
 #endif /* __ARCH_ARM_SRC_ARMV7_A_SCU_H */

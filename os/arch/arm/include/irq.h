@@ -73,12 +73,14 @@
  * save structure and irqsave()/irqrestore() macros)
  */
 
-#if defined(CONFIG_ARCH_CORTEXM3) || defined(CONFIG_ARCH_CORTEXM4) || defined(CONFIG_ARCH_CORTEXM7)
+#if defined(CONFIG_ARCH_CORTEXM3) || defined(CONFIG_ARCH_CORTEXM4) || defined(CONFIG_ARCH_CORTEXM7) || defined(CONFIG_ARCH_CORTEXA32)
 #include <arch/armv7-m/irq.h>
 #elif defined(CONFIG_ARCH_CORTEXR4)
 #include <arch/armv7-r/irq.h>
 #elif defined(CONFIG_ARCH_ARMV8M_FAMILY)
 #include <arch/armv8-m/irq.h>
+#elif defined(CONFIG_ARCH_ARMV7A_FaMILY)
+#include <arch/armv7-a/irq.h>
 #else
 #include <arch/arm/irq.h>
 #endif

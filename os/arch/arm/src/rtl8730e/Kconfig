@@ -1,0 +1,21 @@
+#
+# For a description of the syntax of this configuration file,
+# see kconfig-language at https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
+#
+
+comment "RTL8730E Configuration Options"
+
+choice
+	prompt "RTL8730E Chip Selection"
+	default ARCH_CHIP_RTL8730E
+
+# Chip and Board config names are kept same for RTL8730E for now (03Apr23)
+config ARCH_CHIP_RTL8730E
+	bool "RTL8730E"
+	select ARCH_CORTEXA32
+	select ARCH_HAVE_FPU
+	select ARMV7A_HAVE_ICACHE
+	select ARMV7A_HAVE_DCACHE
+
+endchoice
+

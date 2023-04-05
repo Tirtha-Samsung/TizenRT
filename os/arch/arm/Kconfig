@@ -91,6 +91,13 @@ config ARCH_CHIP_AMEBALITE
 	---help---
 		Realtek AMEBALITE architectures (ARM Cortex-M23/33).
 
+config ARCH_CHIP_RTL8730E
+	bool "Realtek Rtl8730e"
+	select ARCH_CORTEXA32
+	select ARCH_HAVE_MMU
+	---help---
+		Relatek Rtl8730e chipset with Arm CortexA32
+
 endchoice
 
 config ARCH_CHIP
@@ -104,6 +111,7 @@ config ARCH_CHIP
 	default "amebad"	if ARCH_CHIP_AMEBAD
 	default "amebalite"	if ARCH_CHIP_AMEBALITE
 	default "stm32h745"     if ARCH_CHIP_STM32H745
+	default "rtl8730e"	if ARCH_CHIP_RTL8730E
 
 comment "ARM Options"
 
@@ -177,6 +185,16 @@ config ARCH_CORTEXR4
 	select ARCH_HAVE_DABORTSTACK if !ARCH_CHIP_BCM4390X
 	select ARCH_ARMV7R_FAMILY
 
+config ARCH_CORTEXA32
+	bool
+	default n
+	select ARCH_ARMV7A_FAMILY
+	select ARCH_DCACHE
+	select ARCH_ICACHE
+	select ARCH_HAVE_MMU
+	select ARCH_USE_MMU
+	select ARCH_HAVE_TESTSET
+
 config ARCH_ARMV7M_FAMILY
 	bool
 	default n
@@ -189,11 +207,16 @@ config ARCH_ARMV7R_FAMILY
 	bool
 	default n
 
+config ARCH_ARMV7A_FAMILY
+	bool
+	default n
+
 config ARCH_FAMILY
 	string
 	default "armv7-m"	if ARCH_ARMV7M_FAMILY
 	default "armv7-r"	if ARCH_ARMV7R_FAMILY
 	default "armv8-m"	if ARCH_ARMV8M_FAMILY
+	default "armv7-a"	if ARCH_ARMV7A_FAMILY
 
 config ARCH_HAVE_CMNVECTOR
 	bool
@@ -383,6 +406,9 @@ endif
 if ARCH_ARMV7R_FAMILY
 source arch/arm/src/armv7-r/Kconfig
 endif
+if ARCH_ARMV7A_FAMILY
+source arch/arm/src/armv7-a/Kconfig
+endif
 if ARCH_CHIP_LM
 source arch/arm/src/tiva/Kconfig
 endif
@@ -409,5 +435,8 @@ source arch/arm/src/amebalite/Kconfig
 endif
 if ARCH_CHIP_STM32H745
 source arch/arm/src/stm32h745/Kconfig
+endif
+if ARCH_CHIP_RTL8730E
+source arch/arm/src/rtl8730e/Kconfig
 endif
 endif

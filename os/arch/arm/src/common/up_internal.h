@@ -155,7 +155,7 @@
  * register save/restore.
  */
 
-#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8)
+#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXA32)
 
 /* If the floating point unit is present and enabled, then save the
  * floating point registers as well as normal ARM registers.
@@ -365,7 +365,7 @@ void up_systemreset(void) noreturn_function;
 
 void up_irqinitialize(void);
 
-#if defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXR4)
+#if defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXR4) || defined(CONFIG_ARCH_CORTEXA32)
 
 /* Interrupt acknowledge and dispatch */
 
@@ -399,7 +399,7 @@ int up_memfault(int irq, FAR void *context, FAR void *arg);
  * back-ported to the ARM7 and ARM9 families).
  */
 
-#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8)
+#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXA32)
 
 /* Paging support */
 

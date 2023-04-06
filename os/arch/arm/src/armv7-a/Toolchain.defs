@@ -134,7 +134,7 @@ else ifeq ($(CONFIG_ARCH_CORTEXA9),y)
   ARCHCPUFLAGS += -mcpu=cortex-a9
   ZARCHCPUFLAGS := -mcpu=cortex_a9
 else ifeq ($(CONFIG_ARCH_CORTEXA32),y)
-  ARCHCPUFLAGS += -mcpu=cortex_a32
+  ARCHCPUFLAGS += 
   ZARCHCPUFLAGS := -mcpu=cortex_a32
 endif
 
@@ -160,6 +160,8 @@ ifeq ($(CONFIG_ARCH_FPU),y)
   endif
   ifeq ($(CONFIG_ARCH_CORTEXA8),y)
     ARCHFPU = vfpv3
+  else ifeq ($(CONFIG_ARCH_CORTEXA32),y)
+    ARCHFPU = vfpv3
   else ifeq ($(CONFIG_ARCH_CORTEXA9),y)
     ARCHFPU = vfpv3
   else
@@ -179,6 +181,10 @@ ifeq ($(CONFIG_ARM_TOOLCHAIN_ARMCLANG),y)
     LDCPUFLAGS = Cortex-A7
   else ifeq ($(CONFIG_ARCH_CORTEXA8),y)
     LDCPUFLAGS = Cortex-A8
+#Added 
+  else ifeq ($(CONFIG_ARCH_CORTEXA32),y)
+    LDCPUFLAGS = 
+#####################
   else ifeq ($(CONFIG_ARCH_CORTEXA9),y)
     LDCPUFLAGS = Cortex-A9
   endif
@@ -206,6 +212,14 @@ ifeq ($(CONFIG_ARMV7A_TOOLCHAIN),GNU_EABIL)
     else
       ARCHCPUFLAGS = -mcpu=cortex-a8 -mthumb -mfloat-abi=soft
     endif
+#Added
+  else ifeq ($(CONFIG_ARCH_CORTEXA32),y)
+    ifeq ($(CONFIG_ARCH_FPU),y)
+      ARCHCPUFLAGS = -mthumb -mfloat-abi=hard -mfpu=fpv5-sp-d16
+    else
+      ARCHCPUFLAGS = -mthumb -mfloat-abi=soft
+    endif
+
   else ifeq ($(CONFIG_ARCH_CORTEXM55),y)
     ifeq ($(CONFIG_ARCH_FPU),y)
       ARCHCPUFLAGS = -mcpu=cortex-m55 -mthumb -mfloat-abi=hard -mfpu=fpv5-sp-d16

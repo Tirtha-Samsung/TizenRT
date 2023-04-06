@@ -910,9 +910,9 @@ static void _up_assert(int errorcode)
 		for (;;) {
 #ifdef CONFIG_ARCH_LEDS
 			board_autoled_on(LED_PANIC);
-			up_mdelay(250);
+			//up_mdelay(250);
 			board_autoled_off(LED_PANIC);
-			up_mdelay(250);
+			//up_mdelay(250);
 #endif
 		}
 #ifndef CONFIG_BOARD_ASSERT_SYSTEM_HALT

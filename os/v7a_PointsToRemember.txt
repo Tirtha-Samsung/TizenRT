@@ -1,0 +1,52 @@
+This is a temporary file to keep track of the adjustments made to build v7-a architecture
+
+##########################################################################################
+Armv7-a Architecture
+-> Code ported from Nuttx
+-> Kconfigs updated in arch/arm/src and arch/arm/src/armv7-a/src
+-> While building v7A, if AmebaD is used as the basis, then v8-m toolchain
+   has "-mcmse" flags which need to be removed because they are specifically for v8-m
+   security xtensions and are not applicable to v7-a.
+
+-> MMU, PAGING, Virtual Address Environments need to be taken care of
+
+
+##########################################################################################
+Board/Chip Specific files
+-> RTL8730E - Arm CortexA32
+   Code files have been creaed by replicating rtl8721csm (amebad) and making changes
+   as and when necessary. More references may require change later.
+-> A1X - PCDUINO_A10 - Arm CortexA8
+   Chip code files imported from Nuttx and fit into TizenRT.
+   We do not expect to support this chip.
+
+
+
+#########################################################################################
+Major mmissing configs and files
+
+-> These 2 are not present in TizenRT
+CONFIG_RAM_VSTART=0x4a000000
+CONFIG_RAM_START=0x4a000000
+Added directly to the defconfig of a1x/tash as of 27 March 23
+
+-> The below macro is not getting defined
+NUTTX_TEXT_SIZE macro definition in hardware/some_map.c is a problem
+For some reason this file does not define the TEXT_SIZE macro which is dependant on
+two other macro defninitions in the file. Has been hardcoded as of 27 March 23
+
+->cache.h missing in os/include/tinyara
+Needs to be added board specific in os/arch/arm/src/armv7-a and include references
+need to be changed to include "cache.h" from include <tinyara/cache.h>
+The file has been created by replicating and renaming armv7-r/cache.h as of 27 March 23
+
+->kernel/sched folder requires changes for SMP
+Nuttx defines SMP configs in nuttx/sched/Kconfg
+TizenRt dos not have a kernel/sched/Kconfig yet
+
+-> arch/arm/src/armv7-a/syscall.h was missing
+Hasbeen copied from armv7-r code for the timebeing
+Reference used in arch/arm/include/syscall.h
+
+-> arch/arm/src/armv7-a/arm_ssert.c file is missing
+Added the file with dummy code for handling asserts

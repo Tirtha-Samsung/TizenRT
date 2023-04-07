@@ -155,7 +155,7 @@
  * register save/restore.
  */
 
-#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8)
+#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXA32)
 
 /* If the floating point unit is present and enabled, then save the
  * floating point registers as well as normal ARM registers.
@@ -195,6 +195,12 @@
 #define STACK_COLOR    0xdeadbeef
 #define INTSTACK_COLOR 0xdeadbeef
 #define HEAP_COLOR     'h'
+
+/* Non-atomic, but more effective modification of registers */
+
+#define modreg8(v,m,a)  putreg8((getreg8(a) & ~(m)) | ((v) & (m)), (a))
+#define modreg16(v,m,a) putreg16((getreg16(a) & ~(m)) | ((v) & (m)), (a))
+#define modreg32(v,m,a) putreg32((getreg32(a) & ~(m)) | ((v) & (m)), (a))
 
 /****************************************************************************
  * Public Types
@@ -359,7 +365,7 @@ void up_systemreset(void) noreturn_function;
 
 void up_irqinitialize(void);
 
-#if defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXR4)
+#if defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXR4) || defined(CONFIG_ARCH_CORTEXA32)
 
 /* Interrupt acknowledge and dispatch */
 
@@ -393,7 +399,7 @@ int up_memfault(int irq, FAR void *context, FAR void *arg);
  * back-ported to the ARM7 and ARM9 families).
  */
 
-#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8)
+#elif defined(CONFIG_ARCH_CORTEXA5) || defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXA32)
 
 /* Paging support */
 
@@ -456,9 +462,11 @@ FAR int up_setup_regions(FAR struct tcb_s *tcb, uint8_t ttype);
 #ifdef CONFIG_ARCH_FPU
 void up_savefpu(uint32_t *regs);
 void up_restorefpu(const uint32_t *regs);
+void arm_fpuconfig(void);
 #else
 #define up_savefpu(regs)
 #define up_restorefpu(regs)
+#define arm_fpuconfig()
 #endif
 
 /* System timer *************************************************************/

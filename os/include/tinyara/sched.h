@@ -195,6 +195,8 @@
 #define MAX_PID_MASK	(CONFIG_MAX_TASKS - 1)
 #define PIDHASH(pid)	((pid) & MAX_PID_MASK)
 
+#define IDLE_PROCESS_ID (pid_t)1
+
 /********************************************************************************
  * Public Type Definitions
  ********************************************************************************/

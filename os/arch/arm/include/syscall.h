@@ -68,6 +68,8 @@
 #include <arch/armv7-r/syscall.h>
 #elif defined(CONFIG_ARCH_CORTEXM33) || defined(CONFIG_ARCH_CORTEXM55)
 #include <arch/armv8-m/syscall.h>
+#elif defined(CONFIG_ARCH_CORTEXA8) || defined(CONFIG_ARCH_CORTEXA32)
+#include <arch/armv7-a/syscall.h>
 #else
 #include <arch/arm/syscall.h>
 #endif
@@ -75,6 +77,21 @@
 /****************************************************************************
  * Definitions
  ****************************************************************************/
+#define SYS_save_context          (0)
+
+/* SYS call 1:
+ *
+ * void arm_fullcontextrestore(uint32_t *restoreregs) noreturn_function;
+ */
+
+#define SYS_restore_context       (1)
+
+/* SYS call 2:
+ *
+ * void arm_switchcontext(uint32_t **saveregs, uint32_t *restoreregs);
+ */
+
+#define SYS_switch_context        (2)
 
 /****************************************************************************
  * Public Types

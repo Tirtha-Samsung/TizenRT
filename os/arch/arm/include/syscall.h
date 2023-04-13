@@ -69,7 +69,7 @@
 #elif defined(CONFIG_ARCH_CORTEXM33) || defined(CONFIG_ARCH_CORTEXM55)
 #include <arch/armv8-m/syscall.h>
 #else
-#include <arch/arm/syscall.h>
+#include <arch/armv7-a/syscall.h>
 #endif
 
 /****************************************************************************

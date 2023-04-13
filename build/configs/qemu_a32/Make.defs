@@ -1,6 +1,6 @@
 ###########################################################################
 #
-# Copyright 2023 Samsung Electronics All Rights Reserved.
+# Copyright 2020 Samsung Electronics All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -54,11 +54,7 @@ include ${TOPDIR}/tools/Config.mk
 ARCH_FAMILY = $(patsubst "%",%,$(CONFIG_ARCH_FAMILY))
 include ${TOPDIR}/arch/$(CONFIG_ARCH)/src/$(ARCH_FAMILY)/Toolchain.defs
 
-ifeq ($(CONFIG_AMEBAD_TRUSTZONE),y)
-LDSCRIPT = rlx8721d_img2_ns.ld
-else
-LDSCRIPT = rlx8721d_img2_is.ld
-endif
+LDSCRIPT = sdram.ld
 
 ifeq ($(WINTOOL),y)
   # Windows-native toolchains
@@ -75,11 +71,6 @@ else
   ARCHINCLUDES += -isystem $(TOPDIR)/net/lwip/src/include
   ARCHXXINCLUDES = -I. -isystem $(TOPDIR)/include -isystem $(TOPDIR)/../external/include
   ARCHXXINCLUDES += -isystem $(TOPDIR)/net/lwip/src/include
-  ARCHXXINCLUDES += -isystem $(TOPDIR)/../external/include/libcxx
-  ARCHXXINCLUDES += -isystem $(TOPDIR)/../framework/include
-ifeq ($(CONFIG_LW_AIFW),y)
-  ARCHXXINCLUDES += -isystem $(TOPDIR)/../framework/src/lw_aifw/include
-endif
   ARCHSCRIPT = -T$(TOPDIR)/../build/configs/$(CONFIG_ARCH_BOARD)/scripts/$(LDSCRIPT)
 endif
 
@@ -129,8 +120,8 @@ ifeq ($(CONFIG_FRAME_POINTER),y)
   ARCHOPTIMIZATION += -fomit-frame-pointer -mapcs -mno-sched-prolog
 endif
 
-ARCHCFLAGS = -fno-builtin -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -fno-common
-ARCHCXXFLAGS = -fno-builtin -fno-common -fno-exceptions -mcpu=cortex-m33 -mfpu=fpv5-sp-d16 -fno-rtti $(ARCHCPUFLAGS)
+ARCHCFLAGS = -fno-builtin
+ARCHCXXFLAGS = -fno-builtin -fexceptions
 ifeq ($(QUICKBUILD),y)
 ARCHWARNINGS = -Wall -Werror -Wstrict-prototypes -Wshadow -Wundef -Wno-implicit-function-declaration -Wno-unused-function -Wno-unused-but-set-variable
 ARCHWARNINGSXX = -Wall -Werror -Wshadow -Wundef
@@ -148,61 +139,15 @@ endif
 endif
 ARCHDEFINES =
 ARCHPICFLAGS = -fpic -msingle-pic-base -mpic-register=r10
-
 CFLAGS = $(ARCHCFLAGS) $(ARCHWARNINGS) $(ARCHOPTIMIZATION) $(ARCHCPUFLAGS) $(ARCHINCLUDES) $(ARCHDEFINES) $(EXTRADEFINES) -pipe -ffunction-sections -fdata-sections
 CPICFLAGS = $(ARCHPICFLAGS) $(CFLAGS)
 CXXFLAGS = $(ARCHCXXFLAGS) $(ARCHWARNINGSXX) $(ARCHOPTIMIZATION) $(ARCHCPUFLAGS) $(ARCHXXINCLUDES) $(ARCHDEFINES) $(EXTRADEFINES) -pipe
-CXXFLAGS += -std=c++11 -DCLOCK_MONOTONIC -D__TINYARA__
-CXXFLAGS += -fno-exceptions -fcheck-new -fno-rtti
-#CXXFLAGS += -pedantic -D_DEBUG -D_LIBCPP_BUILD_STATIC -ffunction-sections -fdata-sections -D__GLIBCXX__
 CXXPICFLAGS = $(ARCHPICFLAGS) $(CXXFLAGS)
 CPPFLAGS = $(ARCHINCLUDES) $(ARCHDEFINES) $(EXTRADEFINES)
 AFLAGS = $(CFLAGS) -D__ASSEMBLY__
-ifeq ($(CONFIG_EXTERNAL_TFMICRO),y)
-CXXFLAGS += -I$(TOPDIR)/../external/tfmicro
-CXXFLAGS += -I$(TOPDIR)/../external/tfmicro/third_party/flatbuffers/include
-CXXFLAGS += -I$(TOPDIR)/../external/tfmicro/third_party/gemmlowp
-endif
 
-##########################################################################################################################################
-CFLAGS += -march=armv8-m.main+dsp 
+CFLAGS += -march=armv7-a 
 CFLAGS += -mthumb 
-CFLAGS += -mcmse 
-#CFLAGS += -mfloat-abi=hard
-#CFLAGS += -mfpu=fpv5-sp-d16
-
-
-#CFLAGS += -g
-#CFLAGS += -gdwarf-3
-#CFLAGS += -nodefaultlibs
-#CFLAGS += -O2
-#CFLAGS += -D__FPU_PRESENT
-
-#CFLAGS += -fstack-usage
-#CFLAGS += -fdata-sections
-#CFLAGS += -nostartfiles
-#CFLAGS += -nostdlib
-#CFLAGS += -Wpointer-arith
-#CFLAGS += -Wno-write-strings
-#CFLAGS += -Wno-maybe-uninitialized
-#CFLAGS += --save-temps
-#CFLAGS += -c
-#CFLAGS += -MMD
-
-#CFLAGS += -Wextra
-
-#CFLAGS += $(IFLAGS)
-CFLAGS += -DCONFIG_PLATFORM_8721D
-CFLAGS += -DCONFIG_USE_MBEDTLS_ROM_ALG
-CFLAGS += -DDM_ODM_SUPPORT_TYPE=32
-CFLAGS += -DSTD_PRINTF
-CFLAGS += -DCONFIG_PLATFORM_TIZENRT_OS=1
-CFLAGS += -DARM_CORE_CM4
-
-#LDFLAGS += --wrap=printf
-
-##########################################################################################################################################
-
 ASMEXT = .S
 OBJEXT = .o
 LIBEXT = .a
@@ -219,21 +164,3 @@ HOSTCC = gcc
 HOSTINCLUDES = -I.
 HOSTCFLAGS = -Wall -Wstrict-prototypes -Wshadow -Wundef -g -pipe
 HOSTLDFLAGS = 
-
-define MAKE_BOARD_SPECIFIC_BIN
-  $(TOPDIR)/../build/configs/rtl8721csm/rtl8721csm_make_bin.sh
-endef
-
-SECURE_HEADER_SIZE=32
-
-define MAKE_SAMSUNG_HEADER
-  $(TOPDIR)/../os/tools/mksamsungheader.py kernel ${SECURE_HEADER_SIZE}
-endef
-
-define MAKE_BOOTPARAM
-  $(TOPDIR)/../os/tools/mkbootparam.py
-endef
-
-define DOWNLOAD
-  $(TOPDIR)/../build/configs/common_download.sh $(1) $(2) $(3) $(4) $(5) $(6)
-endef

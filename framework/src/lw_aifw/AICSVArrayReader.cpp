@@ -17,7 +17,7 @@
  ****************************************************************************/
 
 #include "lw_aifw/lw_aifw_log.h"
-#include "AICSVArrayReader.h"
+#include "include/AICSVArrayReader.h"
 
 namespace lw_aifw {
 

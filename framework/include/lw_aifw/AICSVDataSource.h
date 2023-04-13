@@ -19,23 +19,23 @@
 #pragma once
 #include "lw_aifw/lw_aifw_result.h"
 #include "lw_aifw/AIDataSource.h"
-#include "AICSVReader.h"
 
 namespace lw_aifw {
 
-	class AICSVDataSource : public AIDataSource {
-	private:
-		uint16_t m_SensorCount;
-		std::shared_ptr<AICSVReader> mAICSVReader;
-	public:
-		AICSVDataSource(const char *sourceName);
-		AICSVDataSource(float *datavalues, uint16_t sensorCount, uint16_t rowCount);
-		~AICSVDataSource();
-		std::shared_ptr<AICSVReader> getCSVReader(void);
-		LW_AIFW_RESULT shareData(void* data);
-		LW_AIFW_RESULT getDataAsync(void);
-		static void onRawDataCollectedListener(LW_AIFW_RESULT result, float *data, uint16_t dataCount, void *args);
-	};
+class AICSVReader;
+class AICSVDataSource : public AIDataSource {
+private:
+	uint16_t m_SensorCount;
+	std::shared_ptr<AICSVReader> mAICSVReader;
+public:
+	AICSVDataSource(const char *sourceName);
+	AICSVDataSource(float *datavalues, uint16_t sensorCount, uint16_t rowCount);
+	~AICSVDataSource();
+	std::shared_ptr<AICSVReader> getCSVReader(void);
+	LW_AIFW_RESULT shareData(void* data);
+	LW_AIFW_RESULT getDataAsync(void);
+	static void onRawDataCollectedListener(LW_AIFW_RESULT result, float *data, uint16_t dataCount, void *args);
+};
 
 } /* lw_aifw */
 

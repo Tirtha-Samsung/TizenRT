@@ -16,7 +16,7 @@
  *
  ****************************************************************************/
 
-#include "AICSVReader.h"
+#include "include/AICSVReader.h"
 #include <stdio.h>
 
 namespace lw_aifw {

@@ -23,7 +23,7 @@
 
 namespace lw_aifw {
 	typedef void (*rawDataCollectedListener)(LW_AIFW_RESULT result, float *data, uint16_t dataCount, void *args);
-	
+
 	class AICSVReader {
 	protected:
 		rawDataCollectedListener mRawDataCollectedListener;

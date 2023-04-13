@@ -71,6 +71,21 @@
  ****************************************************************************/
 
 /* Alternative values for type bool (for historic reasons) */
+#ifndef CONFIG_SMP_NCPUS 
+#define CONFIG_SMP_NCPUS 1 
+#endif
+/* This is the smallest integer type that will hold a bitset of all CPUs */
+#ifndef __ASSEMBLY__
+#if (CONFIG_SMP_NCPUS <= 8)
+typedef volatile uint8_t cpu_set_t;
+#elif (CONFIG_SMP_NCPUS <= 16)
+typedef volatile uint16_t cpu_set_t;
+#elif (CONFIG_SMP_NCPUS <= 32)
+typedef volatile uint32_t cpu_set_t;
+#else
+#  error SMP: Extensions needed to support this number of CPUs
+#endif
+#endif
 
 #ifndef TRUE
 #define TRUE  1

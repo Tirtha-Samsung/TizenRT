@@ -44,7 +44,7 @@
 #include <tinyara/serial/serial.h>
 
 #include <tinyara/arch.h>
-#include "up_internal.h"
+//#include "up_internal.h"
 #include "qemu_serial.h"
 #include "qemu_boot.h"
 #include "gic.h"

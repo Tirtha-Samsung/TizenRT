@@ -34,7 +34,21 @@
 #  include <stdint.h>
 #  include <syscall.h>
 #endif
+#define SYS_save_context          (0)
 
+/* SYS call 1:
+ *
+ * void arm_fullcontextrestore(uint32_t *restoreregs) noreturn_function;
+ */
+
+#define SYS_restore_context       (1)
+
+/* SYS call 2:
+ *
+ * void arm_switchcontext(uint32_t **saveregs, uint32_t *restoreregs);
+ */
+
+#define SYS_switch_context        (2)
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
@@ -201,7 +215,7 @@ extern "C"
  * program+bss+idle stack.  The end of the heap is
  * CONFIG_RAM_END
  */
-
+#define CONFIG_RAM_END (CONFIG_RAM_START + CONFIG_RAM_SIZE)
 EXTERN const uintptr_t g_idle_topstack;
 
 /* Address of the saved user stack pointer */
@@ -212,7 +226,7 @@ EXTERN uint8_t g_intstacktop[];   /* Initial top of interrupt stack */
 #endif
 
 /* These symbols are setup by the linker script. */
-
+EXTERN uint8_t _stext_ram[];
 EXTERN uint8_t _stext[];           /* Start of .text */
 EXTERN uint8_t _etext[];           /* End_1 of .text + .rodata */
 EXTERN const uint8_t _eronly[];    /* End+1 of read only section (.text + .rodata) */
@@ -344,7 +358,7 @@ int  arm_securefault(int irq, void *context, void *arg);
 * (but should be back-ported to the ARM7 and ARM9 families).
  */
 
-#elif defined(CONFIG_ARCH_ARMV7A) || defined(CONFIG_ARCH_ARMV7R)
+#elif defined(CONFIG_ARCH_ARMV7A) || defined(CONFIG_ARCH_ARMV7R) || defined(CONFIG_ARCH_ARMV7A_FAMILY)
 
 /* Interrupt acknowledge and dispatch */
 
@@ -439,7 +453,7 @@ void arm_l2ccinitialize(void);
 
 /* Memory management ********************************************************/
 
-#if CONFIG_MM_REGIONS > 1
+#if CONFIG_KMM_REGIONS > 1
 void arm_addregion(void);
 #else
 # define arm_addregion()

@@ -22,16 +22,16 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
 #include <debug.h>
 
-#include <nuttx/pgalloc.h>
-#include <nuttx/irq.h>
-#include <nuttx/cache.h>
+#include <tinyara/pgalloc.h>
+#include <tinyara/irq.h>
+#include <tinyara/cache.h>
 
 #include "mmu.h"
 #include "pgalloc.h"

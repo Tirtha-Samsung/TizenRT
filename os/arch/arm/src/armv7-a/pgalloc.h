@@ -25,13 +25,13 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <stdbool.h>
 #include <assert.h>
 
-#include <nuttx/addrenv.h>
+#include <tinyara/addrenv.h>
 
 #include "mmu.h"
 

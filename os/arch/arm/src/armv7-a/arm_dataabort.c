@@ -22,19 +22,19 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/irq.h>
+#include <tinyara/irq.h>
 
 #include "sched/sched.h"
 #include "arm_internal.h"
 
 #ifdef CONFIG_PAGING
-#  include <nuttx/page.h>
+#  include <tinyara/page.h>
 #  include "arm.h"
 #endif
 

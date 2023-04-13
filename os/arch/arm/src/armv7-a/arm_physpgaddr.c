@@ -22,15 +22,15 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <sys/types.h>
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/addrenv.h>
-#include <nuttx/pgalloc.h>
+#include <tinyara/arch.h>
+#include <tinyara/addrenv.h>
+#include <tinyara/pgalloc.h>
 
 #include "chip.h"
 #include "mmu.h"

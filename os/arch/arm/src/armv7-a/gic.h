@@ -33,7 +33,7 @@
  * Included Files
  ****************************************************************************/
 
-#include "nuttx/config.h"
+#include "tinyara/config.h"
 
 #ifndef __ASSEMBLY__
 #  include <sys/types.h>

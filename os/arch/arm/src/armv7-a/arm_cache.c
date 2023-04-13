@@ -22,9 +22,10 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/cache.h>
-#include <nuttx/irq.h>
+#include <tinyara/config.h>
+//#include <tinyara/cache.h>
+#include <tinyara/irq.h>
+#include <wchar.h>
 #include <sys/param.h>
 
 #include "cp15_cacheops.h"

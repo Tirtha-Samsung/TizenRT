@@ -31,7 +31,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "chip.h"
-#include "up_internal.h"
+//#include "up_internal.h"
 #include <tinyara/arch.h>
 
 /****************************************************************************

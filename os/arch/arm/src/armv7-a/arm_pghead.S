@@ -22,8 +22,8 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/page.h>
+#include <tinyara/config.h>
+#include <tinyara/page.h>
 
 #include "arm.h"
 #include "cp15.h"

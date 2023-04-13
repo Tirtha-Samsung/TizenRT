@@ -28,14 +28,14 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <sys/param.h>
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/irq.h>
+#include <tinyara/irq.h>
 
 #include "arm_internal.h"
 #include "barriers.h"

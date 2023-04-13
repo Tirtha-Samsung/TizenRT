@@ -25,8 +25,8 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/timers/oneshot.h>
+#include <tinyara/config.h>
+#include <tinyara/timers/oneshot.h>
 
 /****************************************************************************
  * Public Function Prototypes

@@ -22,15 +22,15 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/sched.h>
-#include <nuttx/sched_note.h>
+#include <tinyara/arch.h>
+#include <tinyara/sched.h>
+#include <tinyara/sched_note.h>
 
 #include "arm_internal.h"
 #include "cp15_cacheops.h"

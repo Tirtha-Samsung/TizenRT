@@ -92,16 +92,16 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <errno.h>
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/sched.h>
-#include <nuttx/kmalloc.h>
-#include <nuttx/addrenv.h>
-#include <nuttx/arch.h>
+#include <tinyara/sched.h>
+#include <tinyara/kmalloc.h>
+#include <tinyara/addrenv.h>
+#include <tinyara/arch.h>
 
 #include "addrenv.h"
 

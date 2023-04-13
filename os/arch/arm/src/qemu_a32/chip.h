@@ -29,9 +29,12 @@
 #ifndef __ASSEMBLY__
 #  include <tinyara/arch.h>
 #endif
-
+#define NUTTX_TEXT_VADDR     (CONFIG_RAM_VSTART & 0xfff00000)
+#define NUTTX_TEXT_PADDR     (CONFIG_RAM_START & 0xfff00000)
+#define NUTTX_TEXT_PEND      ((CONFIG_RAM_END + 0x000fffff) & 0xfff00000)
+#define NUTTX_TEXT_SIZE      0xfff00000
+#define NUTTX_RAM_SIZE 10
 /* Number of bytes in @p x kibibytes/mebibytes/gibibytes */
-
 #define KB(x)           ((x) << 10)
 #define MB(x)           (KB(x) << 10)
 #define GB(x)           (MB(UINT64_C(x)) << 10)

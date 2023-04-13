@@ -22,15 +22,15 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/irq.h>
+#include <tinyara/irq.h>
 #ifdef CONFIG_PAGING
-#  include <nuttx/page.h>
+#  include <tinyara/page.h>
 #endif
 
 #include "sched/sched.h"

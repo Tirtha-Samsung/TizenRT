@@ -53,7 +53,8 @@ uintptr_t up_getusrsp(void)
 /****************************************************************************
  * Name: up_dump_register
  ****************************************************************************/
-
+#define _alert lldbg
+#define PRIx32 "x"
 void up_dump_register(void *dumpregs)
 {
   volatile uint32_t *regs = dumpregs ? dumpregs : CURRENT_REGS;

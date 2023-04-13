@@ -27,7 +27,7 @@
 
 #include <tinyara/config.h>
 
-#include "up_internal.h"
+//#include "up_internal.h"
 #include "gic.h"
 
 /****************************************************************************

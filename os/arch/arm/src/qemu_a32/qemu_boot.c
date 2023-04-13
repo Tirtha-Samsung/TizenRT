@@ -39,7 +39,7 @@
 #endif
 
 #include <tinyara/arch.h>
-#include "up_internal.h"
+//#include "up_internal.h"
 #include "mmu.h"
 #include "qemu_boot.h"
 #include "qemu_serial.h"

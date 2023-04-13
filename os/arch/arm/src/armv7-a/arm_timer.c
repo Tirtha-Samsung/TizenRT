@@ -22,10 +22,10 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/arch.h>
-#include <nuttx/irq.h>
-#include <nuttx/kmalloc.h>
+#include <tinyara/config.h>
+#include <tinyara/arch.h>
+#include <tinyara/irq.h>
+#include <tinyara/kmalloc.h>
 
 #include "arm_timer.h"
 #include "barriers.h"

@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include "arm.h"
 #include "cp15.h"
@@ -667,7 +667,7 @@ __cpu0_start:
 	/* Finally branch to the OS entry point */
 
 	mov		lr, #0				/* LR = return address (none) */
-	b		nx_start			/* Branch to nx_start */
+	b		os_start			/* Branch to nx_start */
 	.size	.Lvstart, .-.Lvstart
 
 /***************************************************************************

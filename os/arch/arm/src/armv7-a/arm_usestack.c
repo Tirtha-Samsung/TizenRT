@@ -33,7 +33,7 @@
 
 #include <tinyara/kmalloc.h>
 #include <tinyara/arch.h>
-#include <tinyara/tls.h>
+//#include <tinyara/tls.h>
 
 #include "arm_internal.h"
 
@@ -101,7 +101,7 @@ int up_use_stack(struct tcb_s *tcb, void *stack, size_t stack_size)
   /* Save the new stack allocation */
 
   tcb->stack_alloc_ptr = stack;
-  tcb->stack_base_ptr  = tcb->stack_alloc_ptr;
+//  tcb->stack_base_ptr  = tcb->stack_alloc_ptr;
   tcb->adj_stack_size  =
       STACK_ALIGN_DOWN((uintptr_t)stack + stack_size) - (uintptr_t)stack;
 
@@ -111,7 +111,7 @@ int up_use_stack(struct tcb_s *tcb, void *stack, size_t stack_size)
    * water marks.
    */
 
-  arm_stack_color(tcb->stack_base_ptr, tcb->adj_stack_size);
+  arm_stack_color(tcb->stack_alloc_ptr, tcb->adj_stack_size);
 #endif /* CONFIG_STACK_COLORATION */
 
   return OK;

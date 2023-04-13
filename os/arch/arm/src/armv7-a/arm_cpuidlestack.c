@@ -22,13 +22,13 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <sys/types.h>
 #include <assert.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/sched.h>
+#include <tinyara/arch.h>
+#include <tinyara/sched.h>
 
 #include "smp.h"
 #include "arm_internal.h"

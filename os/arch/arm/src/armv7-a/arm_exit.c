@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * Copyright 2016 Samsung Electronics All Rights Reserved.
+ * Copyright 2023 Samsung Electronics All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,9 @@
  *
  ****************************************************************************/
 /****************************************************************************
- * arch/arm/include/syscall.h
+ * common/up_exit.c
  *
- *   Copyright (C) 2011 Gregory Nutt. All rights reserved.
+ *   Copyright (C) 2007-2009, 201-2014 Gregory Nutt. All rights reserved.
  *   Author: Gregory Nutt <gnutt@nuttx.org>
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,60 +50,148 @@
  *
  ****************************************************************************/
 
-/* This file should never be included directed but, rather, only indirectly
- * through include/syscall.h or include/sys/sycall.h
- */
-
-#ifndef __ARCH_ARM_INCLUDE_SYSCALL_H
-#define __ARCH_ARM_INCLUDE_SYSCALL_H
-
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
-/* Include ARM architecture-specific syscall macros */
-#if defined(CONFIG_ARCH_CORTEXM3) || defined(CONFIG_ARCH_CORTEXM4) || defined(CONFIG_ARCH_CORTEXM7)
-#include <arch/armv7-m/syscall.h>
-#elif defined(CONFIG_ARCH_CORTEXR4) || defined(CONFIG_ARCH_CORTEXR4F)
-#include <arch/armv7-r/syscall.h>
-#elif defined(CONFIG_ARCH_CORTEXM33) || defined(CONFIG_ARCH_CORTEXM55)
-#include <arch/armv8-m/syscall.h>
-#else
-#include <arch/armv7-a/syscall.h>
+#include <tinyara/config.h>
+
+#include <sched.h>
+#include <debug.h>
+#include <tinyara/arch.h>
+
+#ifdef CONFIG_DUMP_ON_EXIT
+#include <tinyara/fs/fs.h>
+#endif
+
+#include "task/task.h"
+#include "sched/sched.h"
+#include "group/group.h"
+#include "up_internal.h"
+
+#ifdef CONFIG_TASK_SCHED_HISTORY
+#include <tinyara/debug/sysdbg.h>
 #endif
 
 /****************************************************************************
- * Definitions
+ * Pre-processor Definitions
  ****************************************************************************/
 
 /****************************************************************************
- * Public Types
+ * Private Data
  ****************************************************************************/
 
 /****************************************************************************
- * Inline functions
+ * Private Functions
  ****************************************************************************/
 
 /****************************************************************************
- * Public Variables
+ * Name: _up_dumponexit
+ *
+ * Description:
+ *   Dump the state of all tasks whenever on task exits.  This is debug
+ *   instrumentation that was added to check file-related reference counting
+ *   but could be useful again sometime in the future.
+ *
  ****************************************************************************/
 
-/****************************************************************************
- * Public Function Prototypes
- ****************************************************************************/
-
-#ifndef __ASSEMBLY__
-#ifdef __cplusplus
-#define EXTERN extern "C"
-extern "C" {
-#else
-#define EXTERN extern
+#if defined(CONFIG_DUMP_ON_EXIT) && defined(CONFIG_DEBUG)
+static void _up_dumponexit(FAR struct tcb_s *tcb, FAR void *arg)
+{
+#if CONFIG_NFILE_DESCRIPTORS > 0
+	FAR struct filelist *filelist;
+#if CONFIG_NFILE_STREAMS > 0
+	FAR struct streamlist *streamlist;
+#endif
+	int i;
 #endif
 
-#undef EXTERN
-#ifdef __cplusplus
+	svdbg("  TCB=%p name=%s pid=%d\n", tcb, tcb->argv[0], tcb->pid);
+	svdbg("    priority=%d state=%d\n", tcb->sched_priority, tcb->task_state);
+
+#if CONFIG_NFILE_DESCRIPTORS > 0
+	filelist = tcb->group->tg_filelist;
+	for (i = 0; i < CONFIG_NFILE_DESCRIPTORS; i++) {
+		struct inode *inode = filelist->fl_files[i].f_inode;
+		if (inode) {
+			svdbg("      fd=%d refcount=%d\n", i, inode->i_crefs);
+		}
+	}
+#endif
+
+#if CONFIG_NFILE_STREAMS > 0
+	streamlist = tcb->group->tg_streamlist;
+	for (i = 0; i < CONFIG_NFILE_STREAMS; i++) {
+		struct file_struct *filep = &streamlist->sl_streams[i];
+		if (filep->fs_fd >= 0) {
+#if CONFIG_STDIO_BUFFER_SIZE > 0
+			svdbg("      fd=%d nbytes=%d\n", filep->fs_fd, filep->fs_bufpos - filep->fs_bufstart);
+#else
+			svdbg("      fd=%d\n", filep->fs_fd);
+#endif
+		}
+	}
+#endif
 }
 #endif
+
+/****************************************************************************
+ * Public Functions
+ ****************************************************************************/
+
+/****************************************************************************
+ * Name: _exit
+ *
+ * Description:
+ *   This function causes the currently executing task to cease
+ *   to exist.  This is a special case of task_delete() where the task to
+ *   be deleted is the currently executing task.  It is more complex because
+ *   a context switch must be perform to the next ready to run task.
+ *
+ ****************************************************************************/
+
+void _exit(int status)
+{
+	struct tcb_s *tcb;
+
+	/* Disable interrupts.  They will be restored when the next
+	 * task is started.
+	 */
+	sllvdbg("TCB=%p exiting\n", this_task());
+
+#if defined(CONFIG_DUMP_ON_EXIT) && defined(CONFIG_DEBUG)
+	sllvdbg("Other tasks:\n");
+	sched_foreach(_up_dumponexit, NULL);
 #endif
 
-#endif							/* __ARCH_ARM_INCLUDE_SYSCALL_H */
+	(void)irqsave();
+
+	/* Destroy the task at the head of the ready to run list. */
+
+	(void)task_exit();
+
+	/* Now, perform the context switch to the new ready-to-run task at the
+	 * head of the list.
+	 */
+
+	tcb = this_task();
+
+#ifdef CONFIG_ARCH_ADDRENV
+	/* Make sure that the address environment for the previously running
+	 * task is closed down gracefully (data caches dump, MMU flushed) and
+	 * set up the address environment for the new thread at the head of
+	 * the ready-to-run list.
+	 */
+
+	(void)group_addrenv(tcb);
+#endif
+
+#ifdef CONFIG_TASK_SCHED_HISTORY
+	/*Save the task name which will be scheduled */
+	save_task_scheduling_status(tcb);
+#endif
+
+	/* Then switch contexts */
+
+	arm_fullcontextrestore(tcb->xcp.regs);
+}

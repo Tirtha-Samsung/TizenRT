@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * Copyright 2016 Samsung Electronics All Rights Reserved.
+ * Copyright 2023 Samsung Electronics All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,16 @@
  *
  ****************************************************************************/
 /****************************************************************************
- * arch/arm/include/syscall.h
+ * arch/arm/src/armv7-a/cp15_invalidate_dcache_all.S
  *
- *   Copyright (C) 2011 Gregory Nutt. All rights reserved.
+ *   Copyright (C) 2013 Gregory Nutt. All rights reserved.
  *   Author: Gregory Nutt <gnutt@nuttx.org>
+ *
+ * Portions of this file derive from Atmel sample code for the SAMA5D3
+ * Cortex-A5 which also has a modified BSD-style license:
+ *
+ *   Copyright (c) 2012, Atmel Corporation
+ *   All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -31,8 +37,8 @@
  *    notice, this list of conditions and the following disclaimer in
  *    the documentation and/or other materials provided with the
  *    distribution.
- * 3. Neither the name NuttX nor the names of its contributors may be
- *    used to endorse or promote products derived from this software
+ * 3. Neither the name NuttX nor Atmel nor the names of the contributors may
+ *    be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -50,60 +56,90 @@
  *
  ****************************************************************************/
 
-/* This file should never be included directed but, rather, only indirectly
- * through include/syscall.h or include/sys/sycall.h
+/* References:
+ *
+ *  "Cortex-A5 MPCore, Technical Reference Manual", Revision: r0p1,
+ *   Copyright (c) 2010  ARM. All rights reserved. ARM DDI 0434B (ID101810)
+ *  "ARM Architecture Reference Manual, ARMv7-A and ARMv7-R edition",
+ *   Copyright (c) 1996-1998, 2000, 2004-2012 ARM. All rights reserved. ARM
+ *   DDI 0406C.b (ID072512)
  */
-
-#ifndef __ARCH_ARM_INCLUDE_SYSCALL_H
-#define __ARCH_ARM_INCLUDE_SYSCALL_H
 
 /****************************************************************************
  * Included Files
  ****************************************************************************/
 
-/* Include ARM architecture-specific syscall macros */
-#if defined(CONFIG_ARCH_CORTEXM3) || defined(CONFIG_ARCH_CORTEXM4) || defined(CONFIG_ARCH_CORTEXM7)
-#include <arch/armv7-m/syscall.h>
-#elif defined(CONFIG_ARCH_CORTEXR4) || defined(CONFIG_ARCH_CORTEXR4F)
-#include <arch/armv7-r/syscall.h>
-#elif defined(CONFIG_ARCH_CORTEXM33) || defined(CONFIG_ARCH_CORTEXM55)
-#include <arch/armv8-m/syscall.h>
-#else
-#include <arch/armv7-a/syscall.h>
-#endif
+#include "cp15.h"
+
+	.file	"cp15_invalidate_dcache_all.S"
 
 /****************************************************************************
- * Definitions
+ * Pre-processor Definitions
  ****************************************************************************/
 
 /****************************************************************************
- * Public Types
+ * Public Symbols
  ****************************************************************************/
+
+	.globl	cp15_invalidate_dcache_all
 
 /****************************************************************************
- * Inline functions
+ * Public Functions
  ****************************************************************************/
+
+	.text
 
 /****************************************************************************
- * Public Variables
+ * Name: cp15_invalidate_dcache_all
+ *
+ * Description:
+ *   Invalidate the entire contents of D cache.
+ *
+ * Input Parameters:
+ *   None
+ *
+ * Returned Value:
+ *   None
+ *
  ****************************************************************************/
 
-/****************************************************************************
- * Public Function Prototypes
- ****************************************************************************/
+	.globl	cp15_invalidate_dcache_all
+	.type	cp15_invalidate_dcache_all, function
 
-#ifndef __ASSEMBLY__
-#ifdef __cplusplus
-#define EXTERN extern "C"
-extern "C" {
-#else
-#define EXTERN extern
-#endif
+cp15_invalidate_dcache_all:
 
-#undef EXTERN
-#ifdef __cplusplus
-}
-#endif
-#endif
+	push		{r4, r5}
 
-#endif							/* __ARCH_ARM_INCLUDE_SYSCALL_H */
+	mrc		CP15_CCSIDR(r1)			/* Read the Cache Size Identification Register */
+
+	ldr		r3, =0x7fff			/* Isolate the NumSets field (bits 13-27) */
+	and		r0, r3, r1, lsr #13		/* r0=NumSets (number of sets - 1) */
+
+	ldr		r3,=0x7				/* Isolate the LineSize field (bits 0-2) */
+	and		r5, r3, r1			/* r4=(Log2LineSize - 2) in word */
+	add		r5, #4				/* r4=Set/way operation line shfit */
+
+	ldr		r3, =0x3ff			/* Isolate the way field (bits 3-12) */
+	and		r1, r3, r1, lsr #3		/* r1=(number of ways - 1) */
+
+	add		r4, r1, #1
+	clz		r4, r4
+	add		r4, #1				/* r4=Set/way operation Way shift */
+
+way_loop:
+	mov		r3, r0				/* Init Sets */
+set_loop:
+	mov		r2, r1, lsl r4			/* r2 = way loop counter << way shift */
+	orr		r2, r3, lsl r5			/* r2 = set/way cache operation format */
+	mcr		CP15_DCISW(r2)			/* Data Cache Invalidate by Set/Way */
+	subs		r3, r3, #1			/* Subtraction set counter */
+	bcs		set_loop			/* Keep looping if not */
+
+	subs		r1, r1, #1			/* Subtraction the way counter */
+	bcs		way_loop			/* Keep looping if not */
+
+	dsb
+	pop		{r4, r5}
+	bx		lr
+	.size cp15_invalidate_dcache_all, . - cp15_invalidate_dcache_all
+	.end

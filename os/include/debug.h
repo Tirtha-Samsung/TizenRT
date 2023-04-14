@@ -78,6 +78,7 @@
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
+#define _alert lldbg
 #ifdef NXFUSE_HOST_BUILD
 #define FAR
 #define DEBUGASSERT(x)

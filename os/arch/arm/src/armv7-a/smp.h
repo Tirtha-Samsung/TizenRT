@@ -25,7 +25,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #ifdef CONFIG_SMP
 

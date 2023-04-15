@@ -22,9 +22,9 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/arch.h>
-#include <nuttx/tls.h>
+#include <tinyara/config.h>
+#include <tinyara/arch.h>
+#include <tinyara/tls.h>
 
 #include "arm_internal.h"
 

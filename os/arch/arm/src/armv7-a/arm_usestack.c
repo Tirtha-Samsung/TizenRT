@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <sys/types.h>
 #include <stdint.h>
@@ -31,9 +31,9 @@
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/kmalloc.h>
-#include <nuttx/arch.h>
-#include <nuttx/tls.h>
+#include <tinyara/kmalloc.h>
+#include <tinyara/arch.h>
+#include <tinyara/tls.h>
 
 #include "arm_internal.h"
 

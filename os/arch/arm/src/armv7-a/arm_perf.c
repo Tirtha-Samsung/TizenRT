@@ -22,8 +22,8 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/arch.h>
-#include <nuttx/clock.h>
+#include <tinyara/arch.h>
+#include <tinyara/clock.h>
 
 #include "arm_internal.h"
 #include "sctlr.h"

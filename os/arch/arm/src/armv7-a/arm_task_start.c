@@ -22,8 +22,8 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/arch.h>
+#include <tinyara/config.h>
+#include <tinyara/arch.h>
 
 #include <assert.h>
 

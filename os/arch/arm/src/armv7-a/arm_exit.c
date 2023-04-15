@@ -22,15 +22,15 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <sched.h>
 #include <debug.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/irq.h>
+#include <tinyara/arch.h>
+#include <tinyara/irq.h>
 #ifdef CONFIG_DUMP_ON_EXIT
-#  include <nuttx/fs/fs.h>
+#  include <tinyara/fs/fs.h>
 #endif
 
 #include "task/task.h"

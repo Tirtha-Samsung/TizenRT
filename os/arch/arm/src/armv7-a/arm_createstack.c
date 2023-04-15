@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <sys/types.h>
 #include <stdint.h>
@@ -31,10 +31,10 @@
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/kmalloc.h>
-#include <nuttx/arch.h>
-#include <nuttx/tls.h>
-#include <nuttx/board.h>
+#include <tinyara/kmalloc.h>
+#include <tinyara/arch.h>
+#include <tinyara/tls.h>
+#include <tinyara/board.h>
 #include <arch/board/board.h>
 
 #include "arm_internal.h"
@@ -63,7 +63,7 @@
  *   - stack_size:  The requested stack size.  At least this much
  *     must be allocated.
  *   - ttype:  The thread type.  This may be one of following (defined in
- *     include/nuttx/sched.h):
+ *     include/tinyara/sched.h):
  *
  *       TCB_FLAG_TTYPE_TASK     Normal user task
  *       TCB_FLAG_TTYPE_PTHREAD  User pthread

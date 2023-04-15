@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 	.file	"arm_vectortab.S"
 

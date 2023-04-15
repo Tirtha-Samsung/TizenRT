@@ -22,10 +22,10 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/compiler.h>
+#include <tinyara/arch.h>
+#include <tinyara/compiler.h>
 
 #include <sys/mman.h>
 

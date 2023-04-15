@@ -22,13 +22,13 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <sched.h>
 #include <debug.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/kmalloc.h>
+#include <tinyara/arch.h>
+#include <tinyara/kmalloc.h>
 
 #include "arm_internal.h"
 
@@ -46,7 +46,7 @@
  * Input Parameters:
  *   - dtcb:  The TCB containing information about the stack to be released
  *   - ttype:  The thread type.  This may be one of following (defined in
- *     include/nuttx/sched.h):
+ *     include/tinyara/sched.h):
  *
  *       TCB_FLAG_TTYPE_TASK     Normal user task
  *       TCB_FLAG_TTYPE_PTHREAD  User pthread

@@ -22,9 +22,9 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/cache.h>
-#include <nuttx/fs/hostfs.h>
+#include <tinyara/config.h>
+#include <tinyara/cache.h>
+#include <tinyara/fs/hostfs.h>
 
 #include <errno.h>
 #include <fcntl.h>

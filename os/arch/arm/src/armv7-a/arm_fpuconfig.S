@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 #include "cp15.h"
 
 #ifdef CONFIG_ARCH_FPU

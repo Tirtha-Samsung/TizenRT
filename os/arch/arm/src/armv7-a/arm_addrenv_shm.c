@@ -22,17 +22,17 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <string.h>
 #include <assert.h>
 #include <errno.h>
 
-#include <nuttx/irq.h>
-#include <nuttx/arch.h>
-#include <nuttx/sched.h>
-#include <nuttx/addrenv.h>
+#include <tinyara/irq.h>
+#include <tinyara/arch.h>
+#include <tinyara/sched.h>
+#include <tinyara/addrenv.h>
 
 #include "mmu.h"
 #include "addrenv.h"

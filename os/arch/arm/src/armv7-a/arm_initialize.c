@@ -22,8 +22,8 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/arch.h>
-#include <nuttx/board.h>
+#include <tinyara/arch.h>
+#include <tinyara/board.h>
 #include <arch/board/board.h>
 
 #include "arm_internal.h"

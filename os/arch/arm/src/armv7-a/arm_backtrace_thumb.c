@@ -22,9 +22,9 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
-#include <nuttx/arch.h>
+#include <tinyara/arch.h>
 
 #include "sched/sched.h"
 #include "arm_internal.h"

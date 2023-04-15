@@ -22,9 +22,9 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 #include <pthread.h>
-#include <nuttx/arch.h>
+#include <tinyara/arch.h>
 
 #include <assert.h>
 

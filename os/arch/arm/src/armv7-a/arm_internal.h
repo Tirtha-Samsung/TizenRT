@@ -25,11 +25,11 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #ifndef __ASSEMBLY__
-#  include <nuttx/compiler.h>
-#  include <nuttx/arch.h>
+#  include <tinyara/compiler.h>
+#  include <tinyara/arch.h>
 #  include <sys/types.h>
 #  include <stdint.h>
 #endif

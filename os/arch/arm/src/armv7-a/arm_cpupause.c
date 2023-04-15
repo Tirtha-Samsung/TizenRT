@@ -22,15 +22,15 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <assert.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/sched.h>
-#include <nuttx/spinlock.h>
-#include <nuttx/sched_note.h>
+#include <tinyara/arch.h>
+#include <tinyara/sched.h>
+#include <tinyara/spinlock.h>
+#include <tinyara/sched_note.h>
 
 #include "arm_internal.h"
 #include "gic.h"

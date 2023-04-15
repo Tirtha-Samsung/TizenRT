@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdio.h>
 #include <stdint.h>
@@ -30,12 +30,12 @@
 #include <assert.h>
 #include <debug.h>
 
-#include <nuttx/irq.h>
-#include <nuttx/tls.h>
-#include <nuttx/arch.h>
-#include <nuttx/board.h>
-#include <nuttx/syslog/syslog.h>
-#include <nuttx/usb/usbdev_trace.h>
+#include <tinyara/irq.h>
+#include <tinyara/tls.h>
+#include <tinyara/arch.h>
+#include <tinyara/board.h>
+#include <tinyara/syslog/syslog.h>
+#include <tinyara/usb/usbdev_trace.h>
 
 #include <arch/board/board.h>
 

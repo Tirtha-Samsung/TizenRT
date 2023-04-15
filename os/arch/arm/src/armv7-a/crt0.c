@@ -22,12 +22,12 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <sys/types.h>
 #include <stdlib.h>
 
-#include <nuttx/addrenv.h>
+#include <tinyara/addrenv.h>
 
 #include <arch/syscall.h>
 

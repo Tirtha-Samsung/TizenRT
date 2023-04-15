@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -30,11 +30,11 @@
 #include <errno.h>
 #include <debug.h>
 
-#include <nuttx/sched.h>
+#include <tinyara/sched.h>
 
 #ifdef CONFIG_PAGING
 
-#include <nuttx/page.h>
+#include <tinyara/page.h>
 
 #include "arm_internal.h"
 

@@ -19,7 +19,7 @@
  ****************************************************************************/
 
 /* This file should never be included directly but, rather, only indirectly
- * through nuttx/irq.h
+ * through tinyara/irq.h
  */
 
 #ifndef __ARCH_ARM_INCLUDE_ARMV7_A_IRQ_H
@@ -29,8 +29,8 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
-#include <nuttx/irq.h>
+#include <tinyara/config.h>
+#include <tinyara/irq.h>
 
 #ifndef __ASSEMBLY__
 #  include <stdint.h>

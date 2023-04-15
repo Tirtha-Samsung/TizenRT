@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -31,9 +31,9 @@
 #include <debug.h>
 #include <syscall.h>
 
-#include <nuttx/arch.h>
-#include <nuttx/sched.h>
-#include <nuttx/addrenv.h>
+#include <tinyara/arch.h>
+#include <tinyara/sched.h>
+#include <tinyara/addrenv.h>
 
 #include "addrenv.h"
 #include "arm.h"

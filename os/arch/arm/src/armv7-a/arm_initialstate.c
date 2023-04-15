@@ -22,12 +22,12 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <stdint.h>
 #include <string.h>
 
-#include <nuttx/arch.h>
+#include <tinyara/arch.h>
 
 #include "arm.h"
 #include "arm_internal.h"

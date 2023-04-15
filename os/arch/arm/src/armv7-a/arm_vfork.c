@@ -22,7 +22,7 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #include <inttypes.h>
 #include <stdint.h>
@@ -31,8 +31,8 @@
 #include <errno.h>
 #include <debug.h>
 
-#include <nuttx/sched.h>
-#include <nuttx/arch.h>
+#include <tinyara/sched.h>
+#include <tinyara/arch.h>
 #include <arch/irq.h>
 
 #include "arm_vfork.h"

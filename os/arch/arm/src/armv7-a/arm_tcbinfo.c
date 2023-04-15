@@ -22,11 +22,11 @@
  * Included Files
  ****************************************************************************/
 
-#include <nuttx/config.h>
+#include <tinyara/config.h>
 
 #ifdef CONFIG_DEBUG_TCBINFO
 
-#include <nuttx/sched.h>
+#include <tinyara/sched.h>
 #include <arch/irq.h>
 
 /****************************************************************************

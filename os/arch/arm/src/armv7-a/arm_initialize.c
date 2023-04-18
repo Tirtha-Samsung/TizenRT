@@ -119,7 +119,7 @@ void up_initialize(void)
   /* Initialize the serial device driver */
 
 #ifdef USE_SERIALDRIVER
-  arm_serialinit();
+  up_serialinit();
 #endif
 
   /* Initialize the network */

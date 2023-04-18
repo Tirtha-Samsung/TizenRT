@@ -556,7 +556,7 @@ void arm_lowputc(char ch);
 void arm_lowputs(const char *str);
 
 #ifdef USE_SERIALDRIVER
-void arm_serialinit(void);
+void up_serialinit(void);
 #endif
 
 #ifdef USE_EARLYSERIALINIT
@@ -579,7 +579,7 @@ void arm_l2ccinitialize(void);
 
 /* Memory management ********************************************************/
 
-#if CONFIG_MM_REGIONS > 1
+#if CONFIG_KMM_REGIONS > 1
 void arm_addregion(void);
 #else
 # define arm_addregion()

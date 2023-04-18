@@ -46,6 +46,8 @@
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
+char assert_info_str[CONFIG_STDIO_BUFFER_SIZE] = {'\0', };
+bool abort_mode = false;
 
 /* USB trace dumping */
 

@@ -80,7 +80,7 @@ void up_reprioritize_rtr(struct tcb_s *tcb, uint8_t priority)
       struct tcb_s *rtcb = this_task();
       bool switch_needed;
 
-      sinfo("TCB=%p PRI=%d\n", tcb, priority);
+      svdbg("TCB=%p PRI=%d\n", tcb, priority);
 
       /* Remove the tcb task from the ready-to-run list.
        * nxsched_remove_readytorun will return true if we just

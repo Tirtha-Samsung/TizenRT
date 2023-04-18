@@ -97,13 +97,13 @@ pid_t up_vfork(const struct vfork_s *context)
   uint32_t stacktop;
   uint32_t stackutil;
 
-  sinfo("vfork context [%p]:\n", context);
-  sinfo("  r4:%08" PRIx32 " r5:%08" PRIx32
+  svdbg("vfork context [%p]:\n", context);
+  svdbg("  r4:%08" PRIx32 " r5:%08" PRIx32
         " r6:%08" PRIx32 " r7:%08" PRIx32 "\n",
         context->r4, context->r5, context->r6, context->r7);
-  sinfo("  r8:%08" PRIx32 " r9:%08" PRIx32 " r10:%08" PRIx32 "\n",
+  svdbg("  r8:%08" PRIx32 " r9:%08" PRIx32 " r10:%08" PRIx32 "\n",
         context->r8, context->r9, context->r10);
-  sinfo("  fp:%08" PRIx32 " sp:%08" PRIx32 " lr:%08" PRIx32 "\n",
+  svdbg("  fp:%08" PRIx32 " sp:%08" PRIx32 " lr:%08" PRIx32 "\n",
         context->fp, context->sp, context->lr);
 
   /* Allocate and initialize a TCB for the child task. */
@@ -115,7 +115,7 @@ pid_t up_vfork(const struct vfork_s *context)
       return (pid_t)ERROR;
     }
 
-  sinfo("TCBs: Parent=%p Child=%p\n", parent, child);
+  svdbg("TCBs: Parent=%p Child=%p\n", parent, child);
 
   /* How much of the parent's stack was utilized?  The ARM uses
    * a push-down stack so that the current stack pointer should
@@ -128,7 +128,7 @@ pid_t up_vfork(const struct vfork_s *context)
   DEBUGASSERT(stacktop > context->sp);
   stackutil = stacktop - context->sp;
 
-  sinfo("Parent: stackutil:%" PRIu32 "\n", stackutil);
+  svdbg("Parent: stackutil:%" PRIu32 "\n", stackutil);
 
   /* Make some feeble effort to preserve the stack contents.  This is
    * feeble because the stack surely contains invalid pointers and other
@@ -163,9 +163,9 @@ pid_t up_vfork(const struct vfork_s *context)
       newfp = context->fp;
     }
 
-  sinfo("Old stack top:%08" PRIx32 " SP:%08" PRIx32 " FP:%08" PRIx32 "\n",
+  svdbg("Old stack top:%08" PRIx32 " SP:%08" PRIx32 " FP:%08" PRIx32 "\n",
         stacktop, context->sp, context->fp);
-  sinfo("New stack top:%08" PRIx32 " SP:%08" PRIx32 " FP:%08" PRIx32 "\n",
+  svdbg("New stack top:%08" PRIx32 " SP:%08" PRIx32 " FP:%08" PRIx32 "\n",
         newtop, newsp, newfp);
 
   /* Update the stack pointer, frame pointer, and volatile registers.  When

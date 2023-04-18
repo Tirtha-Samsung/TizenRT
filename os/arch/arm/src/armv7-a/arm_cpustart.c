@@ -94,7 +94,7 @@ int arm_start_handler(int irq, void *context, void *arg)
 {
   struct tcb_s *tcb = this_task();
 
-  sinfo("CPU%d Started\n", this_cpu());
+  svdbg("CPU%d Started\n", this_cpu());
 
 #ifdef CONFIG_SCHED_INSTRUMENTATION
   /* Notify that this CPU has started */
@@ -148,7 +148,7 @@ int arm_start_handler(int irq, void *context, void *arg)
 
 int up_cpu_start(int cpu)
 {
-  sinfo("Starting CPU%d\n", cpu);
+  svdbg("Starting CPU%d\n", cpu);
 
   DEBUGASSERT(cpu >= 0 && cpu < CONFIG_SMP_NCPUS && cpu != this_cpu());
 

@@ -36,7 +36,7 @@
 
 #include "sched/sched.h"
 #include "arm_internal.h"
-#define sinfo lldbg
+#define svdbg lldbg
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -67,7 +67,7 @@ void arm_sigdeliver(void)
 
   board_autoled_on(LED_SIGNAL);
 
-  sinfo("rtcb=%p sigdeliver=%p sigpendactionq.head=%p\n",
+  svdbg("rtcb=%p sigdeliver=%p sigpendactionq.head=%p\n",
         rtcb, rtcb->xcp.sigdeliver, rtcb->sigpendactionq.head);
   DEBUGASSERT(rtcb->xcp.sigdeliver != NULL);
 
@@ -111,7 +111,7 @@ void arm_sigdeliver(void)
    * arm_fullcontextrestore() is called, but that may not be necessary.
    */
 
-  sinfo("Resuming\n");
+  svdbg("Resuming\n");
 
 #ifdef CONFIG_SMP
   /* Restore the saved 'irqcount' and recover the critical section

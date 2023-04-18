@@ -80,7 +80,7 @@
 #elif defined(CONFIG_ARCH_ARMV8M_FAMILY)
 #include <arch/armv8-m/irq.h>
 #else
-#include <arch/arm/irq.h>
+#include <arch/armv7-a/irq.h>
 #endif
 
 /****************************************************************************

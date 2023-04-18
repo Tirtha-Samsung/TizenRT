@@ -31,7 +31,7 @@
 #include <debug.h>
 
 #include <tinyara/irq.h>
-#include <tinyara/tls.h>
+//#include <tinyara/tls.h>
 #include <tinyara/arch.h>
 #include <tinyara/board.h>
 #include <tinyara/syslog/syslog.h>
@@ -73,7 +73,7 @@ static void arm_stackdump(uint32_t sp, uint32_t stack_top)
 
   /* Flush any buffered SYSLOG data to avoid overwrite */
 
-  syslog_flush();
+  //syslog_flush();
 
   for (stack = sp & ~0x1f; stack < (stack_top & ~0x1f); stack += 32)
     {
@@ -150,7 +150,7 @@ static void arm_dump_task(struct tcb_s *tcb, void *arg)
   uint32_t intpart;
   uint32_t tmp;
 
-  clock_cpuload(tcb->pid, &cpuload);
+  clock_cpuload(tcb->pid, 0, &cpuload);
 
   if (cpuload.total > 0)
     {
@@ -184,7 +184,7 @@ static void arm_dump_task(struct tcb_s *tcb, void *arg)
     }
   else
 #endif
-    {
+/*    {
       FAR char **argv = tcb->group->tg_info->argv + 1;
       size_t npos = 0;
 
@@ -193,7 +193,7 @@ static void arm_dump_task(struct tcb_s *tcb, void *arg)
           npos += snprintf(args + npos, sizeof(args) - npos, " %s", *argv++);
         }
     }
-
+*/
   /* Dump interesting properties of this task */
 
   _alert("  %4d   %4d"
@@ -301,9 +301,9 @@ static void arm_showtasks(void)
         );
 #endif
 
-  nxsched_foreach(arm_dump_task, NULL);
+  sched_foreach(arm_dump_task, NULL);
 #ifdef CONFIG_SCHED_BACKTRACE
-  nxsched_foreach(arm_dump_backtrace, NULL);
+ sched_foreach(arm_dump_backtrace, NULL);
 #endif
 }
 
@@ -380,7 +380,7 @@ static void arm_dump_stack(const char *tag, uint32_t sp,
 
 static void arm_dumpstate(void)
 {
-  struct tcb_s *rtcb = running_task();
+  struct tcb_s *rtcb = this_task();
   uint32_t sp = up_getsp();
 
   /* Show back trace */
@@ -425,7 +425,7 @@ static void arm_dumpstate(void)
   /* Dump the user stack */
 
   arm_dump_stack("User", sp,
-                 (uint32_t)rtcb->stack_base_ptr,
+                 (uint32_t)rtcb->stack_alloc_ptr,
                  (uint32_t)rtcb->adj_stack_size,
 #ifdef CONFIG_ARCH_KERNEL_STACK
                  false
@@ -461,11 +461,11 @@ static void arm_assert(void)
 {
   /* Flush any buffered SYSLOG data */
 
-  syslog_flush();
+ // syslog_flush();
 
   /* Are we in an interrupt handler or the idle task? */
 
-  if (CURRENT_REGS || (running_task())->flink == NULL)
+  if (CURRENT_REGS || (this_task())->flink == NULL)
     {
 #if CONFIG_BOARD_RESET_ON_ASSERT >= 1
       board_reset(CONFIG_BOARD_ASSERT_RESET_VALUE);
@@ -473,7 +473,7 @@ static void arm_assert(void)
 
       /* Disable interrupts on this CPU */
 
-      up_irq_save();
+      irqsave();
 
 #ifdef CONFIG_SMP
       /* Try (again) to stop activity on other CPUs */
@@ -509,13 +509,13 @@ static void arm_assert(void)
  * Name: up_assert
  ****************************************************************************/
 
-void up_assert(const char *filename, int lineno)
+void up_assert(FAR const uint8_t *filename, int linenum)
 {
   board_autoled_on(LED_ASSERTION);
 
   /* Flush any buffered SYSLOG data (prior to the assertion) */
 
-  syslog_flush();
+  //syslog_flush();
 
   _alert("Assertion failed "
 #ifdef CONFIG_SMP
@@ -529,9 +529,9 @@ void up_assert(const char *filename, int lineno)
 #ifdef CONFIG_SMP
          up_cpu_index(),
 #endif
-         filename, lineno
+         filename, linenum
 #if CONFIG_TASK_NAME_SIZE > 0
-         , running_task()->name
+         , this_task()->name
 #endif
         );
 
@@ -541,10 +541,10 @@ void up_assert(const char *filename, int lineno)
 
   /* Flush any buffered SYSLOG data (from the above) */
 
-  syslog_flush();
+  //syslog_flush();
 
 #ifdef CONFIG_BOARD_CRASHDUMP
-  board_crashdump(up_getsp(), running_task(), filename, lineno);
+  board_crashdump(up_getsp(), this_task(), filename, linenum);
 #endif
 
   arm_assert();

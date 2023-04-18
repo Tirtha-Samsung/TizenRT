@@ -71,7 +71,7 @@ else
 ifeq ($(CONFIG_ARCH_CORTEXM55),y)   # Cortex-M55 is ARMv8-M
 ARCH_SUBDIR = armv8-m
 else
-ARCH_SUBDIR = arm
+ARCH_SUBDIR = armv7-a
 endif
 endif
 endif

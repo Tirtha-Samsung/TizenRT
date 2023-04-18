@@ -435,7 +435,7 @@ void up_enable_irq(int irq)
  * Description:
  *   This function implements disabling of the device specified by 'irq'
  *   at the interrupt controller level if supported by the architecture
- *   (up_irq_save() supports the global level, the device level is hardware
+ *   (irqsave() supports the global level, the device level is hardware
  *   specific).
  *
  *   Since this API is not supported on all architectures, it should be

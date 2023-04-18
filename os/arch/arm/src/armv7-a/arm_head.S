@@ -539,22 +539,22 @@ __start:
 	 * 3) The MMU flags to use with the .text space mapping
 	 * 4) The number of 1MB sections in the .text region
 	 *
-	 * Values provided for NUTTX_TEXT_* must all be properly aligned to 1MB
+	 * Values provided for TIZENRT_TEXT_* must all be properly aligned to 1MB
 	 * address boundaries
 	 */
 
 	.type	.LCtextinfo, %object
 .LCtextinfo:
 .LCptextbase:
-	.long	NUTTX_TEXT_PADDR			/* Physical base address */
-	.long	NUTTX_TEXT_VADDR			/* Virtual base address */
+	.long	TIZENRT_TEXT_PADDR			/* Physical base address */
+	.long	TIZENRT_TEXT_VADDR			/* Virtual base address */
 .LCtextflags:
 #ifdef CONFIG_BOOT_RUNFROMFLASH
 	.long	MMU_ROMFLAGS				/* MMU flags text section in FLASH/ROM */
 #else
 	.long	MMU_MEMFLAGS				/* MMU flags for text section in RAM */
 #endif
-	.long	(NUTTX_TEXT_SIZE >> 20)			/* Number of 1MB read-execute sections */
+	.long	(TIZENRT_TEXT_SIZE >> 20)			/* Number of 1MB read-execute sections */
 	.size	.LCtextinfo, . -.LCtextinfo
 
 #ifdef CONFIG_BOOT_RUNFROMFLASH
@@ -566,16 +566,16 @@ __start:
 	 * 3) The MMU flags to use with the primary RAM space mapping
 	 * 4) The number of 1MB sections in the primary RAM region
 	 *
-	 * Values provided for NUTTX_RAM_* must all be properly aligned to 1MB
+	 * Values provided for TIZENRT_RAM_* must all be properly aligned to 1MB
 	 * address boundaries
 	 */
 
 	.type	.LCraminfo, %object
 .LCraminfo:
-	.long	NUTTX_RAM_PADDR				/* Physical base address */
-	.long	NUTTX_RAM_VADDR				/* Virtual base address */
+	.long	TIZENRT_RAM_PADDR				/* Physical base address */
+	.long	TIZENRT_RAM_VADDR				/* Virtual base address */
 	.long	MMU_MEMFLAGS				/* MMU flags for primary RAM section */
-	.long	(NUTTX_RAM_SIZE >> 20)			/* Number of 1MB read-execute sections */
+	.long	(TIZENRT_RAM_SIZE >> 20)			/* Number of 1MB read-execute sections */
 	.size	.LCraminfo, . -.LCraminfo
 
 #endif /* CONFIG_BOOT_RUNFROMFLASH */
@@ -640,7 +640,7 @@ __start:
 	/* Finally branch to the OS entry point */
 
 	mov		lr, #0				/* LR = return address (none) */
-	b		nx_start			/* Branch to nx_start */
+	b		os_start			/* Branch to nx_start */
 	.size	.Lvstart, .-.Lvstart
 
 /***************************************************************************

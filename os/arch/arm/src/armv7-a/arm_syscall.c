@@ -40,7 +40,8 @@
 #include "arm_internal.h"
 #include "group/group.h"
 #include "signal/signal.h"
-
+#define svcinfo lldbg
+#define svcerr lldbg
 /****************************************************************************
  * Private Functions
  ****************************************************************************/

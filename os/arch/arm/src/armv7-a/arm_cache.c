@@ -23,7 +23,7 @@
  ****************************************************************************/
 
 #include <tinyara/config.h>
-#include <tinyara/cache.h>
+//#include <tinyara/cache.h>
 #include <tinyara/irq.h>
 
 #include "cp15_cacheops.h"

@@ -36,7 +36,7 @@
 
 #include "sched/sched.h"
 #include "arm_internal.h"
-
+#define sinfo lldbg
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -126,7 +126,7 @@ void arm_sigdeliver(void)
 #endif
 
 #ifndef CONFIG_SUPPRESS_INTERRUPTS
-  up_irq_save();
+  irqsave();
 #endif
 
   /* Modify the saved return state with the actual saved values in the

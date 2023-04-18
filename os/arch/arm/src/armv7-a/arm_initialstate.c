@@ -60,7 +60,7 @@ void up_initial_state(struct tcb_s *tcb)
   memset(xcp, 0, sizeof(struct xcptcontext));
 
   /* Initialize the idle thread stack */
-
+#if 0
   if (tcb->pid == IDLE_PROCESS_ID)
     {
       tcb->stack_alloc_ptr = (void *)(g_idle_topstack -
@@ -79,10 +79,10 @@ void up_initial_state(struct tcb_s *tcb)
 
       return;
     }
-
+#endif
   /* Initialize the context registers to stack top */
 
-  xcp->regs = (void *)((uint32_t)tcb->stack_base_ptr +
+  xcp->regs = (void *)((uint32_t)tcb->adj_stack_ptr +
                                  tcb->adj_stack_size -
                                  XCPTCONTEXT_SIZE);
 
@@ -92,7 +92,7 @@ void up_initial_state(struct tcb_s *tcb)
 
   /* Save the initial stack pointer */
 
-  xcp->regs[REG_SP] = (uint32_t)tcb->stack_base_ptr +
+  xcp->regs[REG_SP] = (uint32_t)tcb->adj_stack_ptr +
                                 tcb->adj_stack_size;
 
   /* Save the task entry point */

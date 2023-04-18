@@ -35,7 +35,7 @@
 #ifndef __ASSEMBLY__
 #  include <stdint.h>
 #endif
-
+#define up_cpu_index() (0)
 /****************************************************************************
  * Pre-processor Prototypes
  ****************************************************************************/
@@ -321,7 +321,11 @@ struct xcptcontext
  ****************************************************************************/
 
 #ifndef __ASSEMBLY__
-
+#ifdef CONFIG_SMP
+void restore_critical_section(void);
+#else
+#  define restore_critical_section()
+#endif
 /* Name: up_irq_save, up_irq_restore, and friends.
  *
  * NOTE: This function should never be called from application code and,
@@ -350,7 +354,7 @@ static inline irqstate_t irqstate(void)
 
 /* Disable IRQs and return the previous IRQ state */
 
-static inline irqstate_t up_irq_save(void)
+static inline irqstate_t irqsave(void)
 {
   unsigned int cpsr;
 
@@ -392,7 +396,7 @@ static inline irqstate_t up_irq_enable(void)
 
 /* Restore saved IRQ & FIQ state */
 
-static inline void up_irq_restore(irqstate_t flags)
+static inline void irqrestore(irqstate_t flags)
 {
   __asm__ __volatile__
     (
@@ -421,6 +425,9 @@ extern "C"
 /****************************************************************************
  * Public Function Prototypes
  ****************************************************************************/
+
+EXTERN volatile uint32_t *g_current_regs[CONFIG_SMP_NCPUS];
+#define CURRENT_REGS (g_current_regs[up_cpu_index()])
 
 #undef EXTERN
 #ifdef __cplusplus

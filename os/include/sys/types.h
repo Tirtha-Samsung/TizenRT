@@ -66,6 +66,8 @@
 #include <semaphore.h>
 #endif
 
+#define CONFIG_RAM_END (CONFIG_RAM_START + CONFIG_RAM_SIZE)
+
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
@@ -92,6 +94,10 @@
 #else
 #define NULL ((void*)0)
 #endif
+#endif
+
+#ifndef CONFIG_SMP_NCPUS
+#  define CONFIG_SMP_NCPUS 1
 #endif
 
 /* POSIX-like OS return values: */

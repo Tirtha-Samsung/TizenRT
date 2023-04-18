@@ -123,7 +123,7 @@ pid_t up_vfork(const struct vfork_s *context)
    * stack usage should be the difference between those two.
    */
 
-  stacktop = (uint32_t)parent->stack_base_ptr +
+  stacktop = (uint32_t)parent->stack_alloc_ptr +
                        parent->adj_stack_size;
   DEBUGASSERT(stacktop > context->sp);
   stackutil = stacktop - context->sp;
@@ -137,7 +137,7 @@ pid_t up_vfork(const struct vfork_s *context)
    * effort is overkill.
    */
 
-  newtop = (uint32_t)child->cmn.stack_base_ptr +
+  newtop = (uint32_t)child->cmn.stack_alloc_ptr +
                      child->cmn.adj_stack_size;
 
   newsp = newtop - stackutil;

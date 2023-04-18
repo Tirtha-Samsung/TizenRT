@@ -78,6 +78,7 @@ extern uint32_t _vector_start; /* Beginning of vector block */
 extern uint32_t _vector_end;   /* End+1 of vector block */
 
 volatile uint32_t* g_current_regs[CONFIG_SMP_NCPUS];
+#define CURRENT_REGS (g_current_regs[up_cpu_index()])
 
 /****************************************************************************
  * Private Data

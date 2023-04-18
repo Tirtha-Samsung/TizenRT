@@ -29,7 +29,7 @@
 #ifndef __ASSEMBLY__
 #  include <tinyara/arch.h>
 #endif
-
+//#include "a1x_memorymap.h"
 /* Number of bytes in @p x kibibytes/mebibytes/gibibytes */
 
 #define KB(x)           ((x) << 10)
@@ -58,12 +58,15 @@
 #define TIZENRT_TEXT_VADDR     _stext_ram
 #define TIZENRT_TEXT_PADDR     _stext_ram
 #define TIZENRT_TEXT_PEND      _sdata
-#define TIZENRT_TEXT_SIZE      (TIZENRT_TEXT_PEND - TIZENRT_TEXT_PADDR)
+#define TIZENRT_TEXT_SIZE      0xfff00000 //(TIZENRT_TEXT_PEND - TIZENRT_TEXT_PADDR)
+//#define TIZENRT_TEXT_SIZE      (TIZENRT_TEXT_PEND - TIZENRT_TEXT_PADDR)
+
 
 #  define TIZENRT_RAM_VADDR        _sdata
 #  define TIZENRT_RAM_PADDR        _sdata
 #  define TIZENRT_RAM_PEND         ((CONFIG_RAM_END + 0x000fffff) & 0xfff00000)
-#  define TIZENRT_RAM_SIZE      (TIZENRT_RAM_PEND - TIZENRT_RAM_PADDR)
+//#  define TIZENRT_RAM_SIZE      (TIZENRT_RAM_PEND - TIZENRT_RAM_PADDR)
+#  define TIZENRT_RAM_SIZE	10
 
 #    define PGTABLE_BASE_PADDR  CONFIG_RAMBANK1_ADDR
 #    define PGTABLE_BASE_VADDR  CONFIG_RAMBANK1_ADDR

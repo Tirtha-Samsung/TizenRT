@@ -150,10 +150,10 @@
  ****************************************************************************/
 
 /* WR_NSECTIONS determines the number of 1Mb sections to map for the
- * Write/Read/eXecute address region.  This is based on NUTTX_TEXT_SIZE.
+ * Write/Read/eXecute address region.  This is based on TIZENRT_TEXT_SIZE.
  */
 
-#define WR_NSECTIONS ((NUTTX_RAM_SIZE+0x000fffff) >> 20)
+#define WR_NSECTIONS ((TIZENRT_RAM_SIZE+0x000fffff) >> 20)
 
 /****************************************************************************
  * Assembly Macros
@@ -507,14 +507,14 @@ __start:
 
 	.type	.LCptextbase, %object
 .LCptextbase:
-	.long	NUTTX_TEXT_PADDR & 0xfff00000
+	.long	TIZENRT_TEXT_PADDR & 0xfff00000
 	.size	.LCptextbase, . -.LCptextbase
 
 	/* The aligned, virtual base address of the .text section */
 
 	.type	.LCvtextbase, %object
 .LCvtextbase:
-	.long	NUTTX_TEXT_VADDR & 0xfff00000
+	.long	TIZENRT_TEXT_VADDR & 0xfff00000
 	.size	.LCvtextbase, . -.LCvtextbase
 
 	/* The MMU flags used with the .text mapping */
@@ -623,10 +623,10 @@ __start:
 	add		r3, r3, r1			/* r3=flags + base */
 
 	/* Now setup the page tables for our normal mapped RAM region.
-	 * We round NUTTX_RAM_VADDR down to the nearest megabyte boundary.
+	 * We round TIZENRT_RAM_VADDR down to the nearest megabyte boundary.
 	 */
 
-	add		r0, r4, #(NUTTX_RAM_VADDR & 0xfff00000) >> 18
+	add		r0, r4, #(TIZENRT_RAM_VADDR & 0xfff00000) >> 18
 	str		r3, [r0], #4
 
 	/* Now map the remaining WR_NSECTIONS-1 sections of the RAM memory

@@ -110,6 +110,6 @@ void up_release_stack(struct tcb_s *dtcb, uint8_t ttype)
 
  // dtcb->flags &= ~TCB_FLAG_FREE_STACK;
   dtcb->stack_alloc_ptr = NULL;
- // dtcb->stack_base_ptr = NULL;
+  dtcb->stack_base_ptr = NULL;
   dtcb->adj_stack_size = 0;
 }

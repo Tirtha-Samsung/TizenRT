@@ -100,25 +100,25 @@ void up_reprioritize_rtr(struct tcb_s *tcb, uint8_t priority)
       svdbg("TCB=%p PRI=%d\n", tcb, priority);
 
       /* Remove the tcb task from the ready-to-run list.
-       * nxsched_remove_readytorun will return true if we just
+       * sched_remove_readytorun will return true if we just
        * remove the head of the ready to run list.
        */
 
-      switch_needed = nxsched_remove_readytorun(tcb);
+      switch_needed = sched_removereadytorun(tcb);
 
       /* Setup up the new task priority */
 
       tcb->sched_priority = (uint8_t)priority;
 
       /* Return the task to the specified blocked task list.
-       * nxsched_add_readytorun will return true if the task was
+       * sched_add_readytorun will return true if the task was
        * added to the new list.  We will need to perform a context
        * switch only if the EXCLUSIVE or of the two calls is non-zero
        * (i.e., one and only one the calls changes the head of the
        * ready-to-run list).
        */
 
-      switch_needed ^= nxsched_add_readytorun(tcb);
+      switch_needed ^= sched_addreadytorun(tcb);
 
       /* Now, perform the context switch if one is needed */
 
@@ -130,12 +130,12 @@ void up_reprioritize_rtr(struct tcb_s *tcb, uint8_t priority)
 
           if (g_pendingtasks.head)
             {
-              nxsched_merge_pending();
+              sched_mergepending();
             }
 
           /* Update scheduler parameters */
 
-          nxsched_suspend_scheduler(rtcb);
+          //sched_suspendscheduler(rtcb);
 
           /* Are we in an interrupt handler? */
 
@@ -155,7 +155,7 @@ void up_reprioritize_rtr(struct tcb_s *tcb, uint8_t priority)
 
               /* Update scheduler parameters */
 
-              nxsched_resume_scheduler(rtcb);
+              //sched_resume_scheduler(rtcb);
 
               /* Then switch contexts.  Any necessary address environment
                * changes will be made when the interrupt returns.
@@ -172,7 +172,7 @@ void up_reprioritize_rtr(struct tcb_s *tcb, uint8_t priority)
 
               /* Update scheduler parameters */
 
-              nxsched_resume_scheduler(nexttcb);
+              //sched_resume_scheduler(nexttcb);
 
               /* Switch context to the context of the task at the head of the
                * ready to run list.

@@ -196,6 +196,10 @@
 #define INTSTACK_COLOR 0xdeadbeef
 #define HEAP_COLOR     'h'
 
+#if defined(CONFIG_ARCH_ARMV7A)
+#define CURRENT_REGS (g_current_regs[up_cpu_index()])
+#endif
+
 /****************************************************************************
  * Public Types
  ****************************************************************************/
@@ -221,7 +225,12 @@ extern "C" {
  * interrupt processing.
  */
 
+#if defined(CONFIG_ARCH_ARMV7A)
+EXTERN volatile uint32_t *g_current_regs[CONFIG_SMP_NCPUS];
+#endif
+
 EXTERN volatile uint32_t *current_regs;
+
 
 /* This is the beginning of heap as provided from up_head.S.
  * This is the first address in DRAM after the loaded

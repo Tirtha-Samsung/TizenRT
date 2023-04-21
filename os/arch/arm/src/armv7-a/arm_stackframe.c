@@ -91,7 +91,7 @@ void *up_stack_frame(struct tcb_s *tcb, size_t frame_size)
   void *ret;
 
   /* Align the frame_size */
-  uintptr_t topaddr;
+
   frame_size = STACK_ALIGN_UP(frame_size);
 
   /* Is there already a stack allocated? Is it big enough? */
@@ -101,18 +101,14 @@ void *up_stack_frame(struct tcb_s *tcb, size_t frame_size)
       return NULL;
     }
 
-  ret = tcb->adj_stack_ptr;
+  ret = tcb->stack_base_ptr;
   memset(ret, 0, frame_size);
 
   /* Save the adjusted stack values in the struct tcb_s */
-/*
+
   tcb->stack_base_ptr  = (uint8_t *)tcb->stack_base_ptr + frame_size;
   tcb->adj_stack_size -= frame_size;
-*/
 
-  topaddr = (uintptr_t)tcb->adj_stack_ptr - frame_size;
-        tcb->adj_stack_ptr = (FAR void *)topaddr;
-        tcb->adj_stack_size -= frame_size;
   /* And return the pointer to the allocated region */
 
   return ret;

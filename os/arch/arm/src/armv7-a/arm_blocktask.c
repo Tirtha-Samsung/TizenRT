@@ -113,7 +113,7 @@ void up_block_task(struct tcb_s *tcb, tstate_t task_state)
     {
       /* Update scheduler parameters */
 
-   //   nxsched_suspend_scheduler(rtcb);
+   //   sched_suspend_scheduler(rtcb);
 
       /* Are we in an interrupt handler? */
 
@@ -133,7 +133,7 @@ void up_block_task(struct tcb_s *tcb, tstate_t task_state)
 
           /* Reset scheduler parameters */
 
-     //     nxsched_resume_scheduler(rtcb);
+     //     sched_resume_scheduler(rtcb);
 
           /* Then switch contexts.  Any necessary address environment
            * changes will be made when the interrupt returns.
@@ -150,7 +150,7 @@ void up_block_task(struct tcb_s *tcb, tstate_t task_state)
 
           /* Reset scheduler parameters */
 
-       //   nxsched_resume_scheduler(nexttcb);
+       //   sched_resume_scheduler(nexttcb);
 
           /* Switch context to the context of the task at the head of the
            * ready to run list.

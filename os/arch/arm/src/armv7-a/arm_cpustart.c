@@ -121,7 +121,7 @@ int arm_start_handler(int irq, void *context, void *arg)
 
   /* Reset scheduler parameters */
 
-  nxsched_resume_scheduler(tcb);
+  sched_resume_scheduler(tcb);
 
   /* Dump registers so that we can see what is going to happen on return */
 

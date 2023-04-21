@@ -106,6 +106,9 @@ void up_initialize(void)
 
   arm_color_intstack();
 
+	/* Initialize the interrupt subsystem */
+
+	up_irqinitialize();
   /* Add any extra memory fragments to the memory manager */
 
   arm_addregion();
@@ -133,10 +136,66 @@ void up_initialize(void)
     }
 #endif
 
-  /* Initialize the serial device driver */
+#if !defined(CONFIG_SUPPRESS_INTERRUPTS) && !defined(CONFIG_SUPPRESS_TIMER_INTS) && \
+	!defined(CONFIG_SYSTEMTICK_EXTCLK)
+	up_timer_initialize();
+
+#ifdef CONFIG_WATCHDOG_FOR_IRQ
+#if ((CONFIG_WATCHDOG_FOR_IRQ_INTERVAL * 1000) <= CONFIG_USEC_PER_TICK)
+#error "CONFIG_WATCHDOG_FOR_IRQ_INTERVAL should be greater than CONFIG_USEC_PER_TICK"
+#endif
+	up_wdog_init(CONFIG_WATCHDOG_FOR_IRQ_INTERVAL);
+#endif
+#endif
+
+	/* Initialize pipe */
+
+#if defined(CONFIG_PIPES) && CONFIG_DEV_PIPE_SIZE > 0
+	pipe_initialize();
+#endif
+
+	/* Register devices */
+
+#if CONFIG_NFILE_DESCRIPTORS > 0
+
+#if defined(CONFIG_DEV_NULL)
+	devnull_register();			/* Standard /dev/null */
+#endif
+
+#ifdef CONFIG_VIDEO_NULL
+	video_null_initialize("/dev/video0");	/* Standard /dev/video0 */
+#endif
+
+#if defined(CONFIG_BLUETOOTH) && defined(CONFIG_BLUETOOTH_NULL)
+	btnull_register();    /* bluetooth bt_null */
+#endif
+
+#ifdef CONFIG_DEV_URANDOM
+	devurandom_register();			/* /dev/urandom */
+#endif
+
+#if defined(CONFIG_DEV_ZERO)
+	devzero_register();			/* Standard /dev/zero */
+#endif
+
+#endif							/* CONFIG_NFILE_DESCRIPTORS */
+
+	/* Initialize the serial device driver */
 
 #ifdef USE_SERIALDRIVER
   up_serialinit();
+#endif
+
+	/* Initialize the console device driver (if it is other than the standard
+	 * serial driver).
+	 */
+
+#if defined(CONFIG_DEV_LOWCONSOLE)
+	lowconsole_init();
+#elif defined(CONFIG_SYSLOG_CONSOLE)
+	syslog_console_init();
+#elif defined(CONFIG_RAMLOG_CONSOLE)
+	ramlog_consoleinit();
 #endif
 
   /* Initialize the network */
@@ -150,7 +209,9 @@ void up_initialize(void)
 #endif
 
   /* Initialize the L2 cache if present and selected */
-
+#ifdef CONFIG_ARMV7A_HAVE_L2CC
   arm_l2ccinitialize();
+#endif
+
   board_autoled_on(LED_IRQSENABLED);
 }

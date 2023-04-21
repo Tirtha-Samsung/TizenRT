@@ -36,6 +36,21 @@ config ARCH_CHIP_BCM4390X
 	select ARM_UNWIND
 	---help---
 		Cypress BCM4390x SoC architectures (ARM Cortex-R)
+config ARCH_CHIP_IMX6
+	bool "NXP/Freescale iMX.6"
+	select ARCH_CORTEXA9
+	select ARM_THUMB
+	select ARMV7A_HAVE_L2CC_PL310
+	select ARM_HAVE_NEON
+	select ARCH_HAVE_TRUSTZONE
+	select ARCH_HAVE_LOWVECTORS
+	select ARCH_HAVE_FETCHADD
+	select ARCH_HAVE_SDRAM
+	select BOOT_RUNFROMSDRAM
+	select ARCH_HAVE_ADDRENV
+	select ARCH_NEED_ADDRENV_MAPPING
+	---help---
+		Freescale iMX.6 architectures (Cortex-A9)
 
 config ARCH_CHIP_STM32
 	bool "STMicro STM32"
@@ -104,6 +119,7 @@ config ARCH_CHIP
 	default "amebad"	if ARCH_CHIP_AMEBAD
 	default "amebalite"	if ARCH_CHIP_AMEBALITE
 	default "stm32h745"     if ARCH_CHIP_STM32H745
+	default "imx6"		if ARCH_CHIP_IMX6
 
 comment "ARM Options"
 
@@ -141,7 +157,7 @@ config ARCH_CORTEXM7
 	select ARCH_HAVE_MEMFAULT_DEBUG
 	select ARCH_HAVE_NESTED_INTERRUPT
 	select ARCH_ARMV7M_FAMILY
-
+	
 config ARCH_CORTEXM33
 	bool
 	default n
@@ -168,6 +184,17 @@ config ARCH_CORTEXM55
 	select ARCH_HAVE_NESTED_INTERRUPT
 	select ARCH_HAVE_LAZYFPU
 
+config ARCH_CORTEXA9
+	bool
+	default n
+	select ARCH_ARMV7A
+	select ARCH_DCACHE
+	select ARCH_ICACHE
+	select ARCH_HAVE_MMU
+	select ARCH_USE_MMU
+	select ARCH_HAVE_TESTSET
+	select ARM_HAVE_MPCORE
+
 config ARCH_CORTEXR4
 	bool
 	default n
@@ -189,8 +216,14 @@ config ARCH_ARMV7R_FAMILY
 	bool
 	default n
 
+config ARCH_ARMV7A
+	bool
+	default n
+	select ARM_HAVE_WFE_SE
+	
 config ARCH_FAMILY
 	string
+	default "armv7-a"	if ARCH_ARMV7A
 	default "armv7-m"	if ARCH_ARMV7M_FAMILY
 	default "armv7-r"	if ARCH_ARMV7R_FAMILY
 	default "armv8-m"	if ARCH_ARMV8M_FAMILY
@@ -374,6 +407,9 @@ config SYSTEM_REBOOT_REASON
 		Interfaces can be used through prctl with
 		PR_REBOOT_REASON_READ, PR_REBOOT_REASON_WRITE and PR_REBOOT_REASON_CLEAR.
 
+if ARCH_ARMV7A
+source "arch/arm/src/armv7-a/Kconfig"
+endif
 if ARCH_ARMV7M_FAMILY
 source arch/arm/src/armv7-m/Kconfig
 endif
@@ -382,6 +418,9 @@ source arch/arm/src/armv8-m/Kconfig
 endif
 if ARCH_ARMV7R_FAMILY
 source arch/arm/src/armv7-r/Kconfig
+endif
+if ARCH_CHIP_IMX6
+source "arch/arm/src/imx6/Kconfig"
 endif
 if ARCH_CHIP_LM
 source arch/arm/src/tiva/Kconfig

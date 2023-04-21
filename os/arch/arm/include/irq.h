@@ -79,13 +79,16 @@
 #include <arch/armv7-r/irq.h>
 #elif defined(CONFIG_ARCH_ARMV8M_FAMILY)
 #include <arch/armv8-m/irq.h>
-#else
+#elif defined(CONFIG_ARCH_ARMV7A)
 #include <arch/armv7-a/irq.h>
+#else
+#include <arch/arm/irq.h>
 #endif
 
 /****************************************************************************
  * Definitions
  ****************************************************************************/
+#define CURRENT_REGS (g_current_regs[up_cpu_index()])
 
 /****************************************************************************
  * Public Types
@@ -112,6 +115,7 @@ extern "C" {
 #endif
 
 
+EXTERN volatile uint32_t *g_current_regs[CONFIG_SMP_NCPUS];
 /****************************************************************************
  * Public Function Prototypes
  ****************************************************************************/
@@ -134,8 +138,6 @@ extern "C" {
 
 #ifdef CONFIG_SMP
 int up_cpu_index(void);
-#else
-#  define up_cpu_index() (0)
 #endif
 
 /****************************************************************************
@@ -151,20 +153,7 @@ int up_cpu_index(void);
  *
  ****************************************************************************/
 
-static inline bool up_interrupt_context(void)
-{
-#ifdef CONFIG_SMP
-  irqstate_t flags = up_irq_save();
-#endif
-
-  bool ret = CURRENT_REGS != NULL;
-
-#ifdef CONFIG_SMP
-  up_irq_restore(flags);
-#endif
-
-  return ret;
-}
+bool up_interrupt_context(void);
 #undef EXTERN
 #ifdef __cplusplus
 }

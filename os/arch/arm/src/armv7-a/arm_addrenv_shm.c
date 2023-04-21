@@ -82,7 +82,7 @@
 
 int up_shmat(uintptr_t *pages, unsigned int npages, uintptr_t vaddr)
 {
-  struct tcb_s *tcb = nxsched_self();
+  struct tcb_s *tcb = sched_self();
   struct task_group_s *group;
   uintptr_t *l1entry;
   uint32_t *l2table;
@@ -233,7 +233,7 @@ int up_shmat(uintptr_t *pages, unsigned int npages, uintptr_t vaddr)
 
 int up_shmdt(uintptr_t vaddr, unsigned int npages)
 {
-  struct tcb_s *tcb = nxsched_self();
+  struct tcb_s *tcb = sched_self();
   struct task_group_s *group;
   uintptr_t *l1entry;
   uint32_t *l2table;

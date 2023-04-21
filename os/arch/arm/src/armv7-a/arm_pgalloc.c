@@ -217,7 +217,7 @@ static int get_pgtable(group_addrenv_t *addrenv, uintptr_t vaddr)
 
 uintptr_t pgalloc(uintptr_t brkaddr, unsigned int npages)
 {
-  struct tcb_s *tcb = nxsched_self();
+  struct tcb_s *tcb = sched_self();
   struct task_group_s *group;
   uint32_t *l2table;
   irqstate_t flags;

@@ -444,7 +444,7 @@ static void arm_dumpstate(void)
   /* Dump the user stack */
 
   arm_dump_stack("User", sp,
-                 (uint32_t)rtcb->stack_alloc_ptr,
+                 (uint32_t)rtcb->stack_base_ptr,
                  (uint32_t)rtcb->adj_stack_size,
 #ifdef CONFIG_ARCH_KERNEL_STACK
                  false

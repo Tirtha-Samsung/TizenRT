@@ -53,7 +53,6 @@
 
 #include "sched/sched.h"
 #include "arm_internal.h"
-#define svdbg lldbg
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -68,6 +67,7 @@
  *
  ****************************************************************************/
 
+#ifndef CONFIG_DISABLE_SIGNALS
 void arm_sigdeliver(void)
 {
   struct tcb_s *rtcb = this_task();
@@ -163,3 +163,4 @@ void arm_sigdeliver(void)
   board_autoled_off(LED_SIGNAL);
   arm_fullcontextrestore(regs);
 }
+#endif

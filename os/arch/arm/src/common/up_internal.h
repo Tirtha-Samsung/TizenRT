@@ -196,7 +196,7 @@
 #define INTSTACK_COLOR 0xdeadbeef
 #define HEAP_COLOR     'h'
 
-#if defined(CONFIG_ARCH_ARMV7A)
+#if defined(CONFIG_ARCH_ARMV7A_FAMILY)
 #define CURRENT_REGS (g_current_regs[up_cpu_index()])
 #endif
 
@@ -225,7 +225,7 @@ extern "C" {
  * interrupt processing.
  */
 
-#if defined(CONFIG_ARCH_ARMV7A)
+#if defined(CONFIG_ARCH_ARMV7A_FAMILY)
 EXTERN volatile uint32_t *g_current_regs[CONFIG_SMP_NCPUS];
 #endif
 

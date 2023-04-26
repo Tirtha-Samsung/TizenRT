@@ -44,8 +44,6 @@
 #include <stdint.h>
 #include <debug.h>
 
-//#include <tinyara/spinlock.h>
-
 #include "arm_internal.h"
 
 /****************************************************************************

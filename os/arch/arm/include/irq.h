@@ -79,7 +79,7 @@
 #include <arch/armv7-r/irq.h>
 #elif defined(CONFIG_ARCH_ARMV8M_FAMILY)
 #include <arch/armv8-m/irq.h>
-#elif defined(CONFIG_ARCH_ARMV7A)
+#elif defined(CONFIG_ARCH_ARMV7A_FAMILY)
 #include <arch/armv7-a/irq.h>
 #else
 #include <arch/arm/irq.h>

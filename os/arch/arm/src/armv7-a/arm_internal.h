@@ -501,7 +501,7 @@ int  arm_securefault(int irq, void *context, void *arg);
 * (but should be back-ported to the ARM7 and ARM9 families).
  */
 
-#elif defined(CONFIG_ARCH_ARMV7A) || defined(CONFIG_ARCH_ARMV7R) || defined(CONFIG_ARCH_ARMV7A_FAMILY)
+#elif defined(CONFIG_ARCH_ARMV7R) || defined(CONFIG_ARCH_ARMV7A_FAMILY)
 
 /* Interrupt acknowledge and dispatch */
 

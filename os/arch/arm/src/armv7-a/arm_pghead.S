@@ -135,11 +135,11 @@
    * beginning of RAM.
    */
 
-#  if !defined(CONFIG_RAM_START) || !defined(CONFIG_RAM_VSTART)
-#    error "CONFIG_RAM_START or CONFIG_RAM_VSTART is not defined"
+#  if !defined(CONFIG_RAM_KREGIONx_START) || !defined(CONFIG_RAM_VSTART)
+#    error "CONFIG_RAM_KREGIONx_START or CONFIG_RAM_VSTART is not defined"
 #  endif
 
-#  if CONFIG_RAM_START == CONFIG_RAM_VSTART
+#  if CONFIG_RAM_KREGIONx_START == CONFIG_RAM_VSTART
 #    define CONFIG_IDENTITY_TEXTMAP 1
 #  endif
 
@@ -687,7 +687,7 @@ __start:
 	/* Finally branch to the OS entry point */
 
 	mov		lr, #0				/* LR = return address (none) */
-	b		nx_start			/* Branch to nx_start */
+	b		os_start			/* Branch to os_start */
 	.size	.Lvstart, .-.Lvstart
 
 /***************************************************************************

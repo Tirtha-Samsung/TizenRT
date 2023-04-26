@@ -50,7 +50,6 @@
 
 #include <tinyara/kmalloc.h>
 #include <tinyara/arch.h>
-//#include <tinyara/tls.h>
 #include <tinyara/board.h>
 #include <arch/board/board.h>
 

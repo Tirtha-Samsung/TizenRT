@@ -125,10 +125,10 @@ pid_t up_vfork(const struct vfork_s *context)
 
   /* Allocate and initialize a TCB for the child task. */
 
-  child = nxtask_setup_vfork((start_t)(context->lr & ~1));
+  child = task_vforksetup((start_t)(context->lr & ~1));
   if (!child)
     {
-      serr("ERROR: nxtask_setup_vfork failed\n");
+      serr("ERROR: task_vforksetup failed\n");
       return (pid_t)ERROR;
     }
 
@@ -217,7 +217,7 @@ pid_t up_vfork(const struct vfork_s *context)
 
           /* REVISIT:  This logic is *not* common. */
 
-#if defined(CONFIG_ARCH_ARMV7A)
+#if defined(CONFIG_ARCH_ARMV7A_FAMILY)
 #  ifdef CONFIG_BUILD_KERNEL
 
           child->cmn.xcp.syscall[index].cpsr =
@@ -250,5 +250,5 @@ pid_t up_vfork(const struct vfork_s *context)
    * will discard the TCB by calling nxtask_abort_vfork().
    */
 
-  return nxtask_start_vfork(child);
+  return task_vforkstart(child);
 }

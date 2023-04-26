@@ -1,4 +1,21 @@
 /****************************************************************************
+ *
+ * Copyright 2023 Samsung Electronics All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+ * either express or implied. See the License for the specific
+ * language governing permissions and limitations under the License.
+ *
+ ****************************************************************************/
+/****************************************************************************
  * arch/arm/src/imx6/hardware/imx_memorymap.h
  *
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -750,7 +767,7 @@
   /* The "primary" RAM is the SDRAM or SRAM used for .bss and .data */
 
 #  define TIZENRT_RAM_VADDR        (CONFIG_RAM_VSTART & 0xfff00000)
-#  define TIZENRT_RAM_PADDR        (CONFIG_RAM_START & 0xfff00000)
+#  define TIZENRT_RAM_PADDR        (CONFIG_RAM_KREGIONx_START & 0xfff00000)
 #  define TIZENRT_RAM_PEND         ((CONFIG_RAM_END + 0x000fffff) & 0xfff00000)
 #  define TIZENRT_RAM_SIZE         (TIZENRT_RAM_PEND - TIZENRT_RAM_PADDR)
 
@@ -767,7 +784,7 @@
    */
 
 #  define TIZENRT_TEXT_VADDR       (CONFIG_RAM_VSTART & 0xfff00000)
-#  define TIZENRT_TEXT_PADDR       (CONFIG_RAM_START & 0xfff00000)
+#  define TIZENRT_TEXT_PADDR       (CONFIG_RAM_KREGIONx_START & 0xfff00000)
 #  define TIZENRT_TEXT_PEND        ((CONFIG_RAM_END + 0x000fffff) & 0xfff00000)
 #  define TIZENRT_TEXT_SIZE        (TIZENRT_TEXT_PEND - TIZENRT_TEXT_PADDR)
 

@@ -134,3 +134,216 @@ config AUTOMOUNT_ROMFS
 	depends on FS_ROMFS
 	---help---
 		If enabled, mount romfs partition automatically at boot.
+
+config BOARD_CRASHDUMP
+        bool "Enable Board level logging of crash dumps"
+        default n
+        ---help---
+                If selected up_assert will call out to board_crashdump, in the case
+                of an assertion failure, prior to calling exit. Or in the
+                case of a hardfault prior to looping indefinitely. board_crashdump
+                then has a chance to save the state of the machine.
+
+                The purpose of board_crashdump is to save as much information as it can
+                about the cause of the fault and then most likely reset the system.
+
+                N.B. There is limited system resources that can be used, who knows
+                what memory is trashed? So all we can expect to do is save the
+                "machine state" in a place where on the next reset can write it
+                to more sophisticated storage in a sane operating environment.
+
+config BOARD_ENTROPY_POOL
+        bool "Enable Board level storing of entropy pool structure"
+        default n
+        depends on CRYPTO_RANDOM_POOL
+        ---help---
+                Entropy pool structure can be provided by board source.
+                Use for this is, for example, to allocate entropy pool
+                from special area of RAM which content is kept over
+                system reset.
+
+config BOARD_INITRNGSEED
+        bool "Enable Board level initial seeding of entropy pool RNG"
+        default n
+        depends on CRYPTO_RANDOM_POOL
+        ---help---
+                If enabled, entropy pool random number generator will call
+                board_init_rndseed() upon initialization. This function
+                can then provide early entropy seed to the pool through
+                entropy injection APIs provided at 'nuttx/random.h'.
+
+config BOARDCTL
+        bool "Enable boardctl() interface"
+        default n
+        ---help---
+                Enables support for the boardctl() interface.  Architecture
+                specific logic must provide board_app_initialize() interface.
+
+if BOARDCTL
+
+config BOARDCTL_FINALINIT
+        bool "Enable board app final init"
+        default n
+        ---help---
+                Enables support for the BOARDIOC_FINALINIT boardctl() command.
+                Architecture specific logic must provide board_app_finalinitialize()
+                interface.
+
+config BOARDCTL_POWEROFF
+        bool "Enable power off interfaces"
+        default n
+        depends on ARCH_HAVE_POWEROFF
+        ---help---
+                Enables support for the BOARDIOC_POWEROFF boardctl() command.
+                Architecture specific logic must provide the board_power_off()
+                interface.
+
+config BOARDCTL_RESET
+        bool "Enable reset interfaces"
+	depends on ARCH_HAVE_RESET
+        default n    
+#	default y if ARCH_HAVE_RESET
+    #    default n if !ARCH_HAVE_RESET
+        ---help---
+                Enables support for the BOARDIOC_RESET boardctl() command.
+                Architecture specific logic must provide the board_reset()
+                interface.
+
+config BOARD_RESET_ON_ASSERT
+        int "Enable Board Reset after assert"
+        default 0
+        depends on BOARDCTL_RESET
+        ---help---
+                == 0 up_assert never reset the machine
+                >= 1 up_assert from interrupt handler or IDLE thread will reset the
+                     machine
+                >= 2 up_assert from user or kernel thread will reset the machine.
+                     The default behavior is just to kill the asserting thread.
+
+config BOARD_ASSERT_RESET_VALUE
+        int "Board reset argument"
+        default 1
+        depends on BOARDCTL_RESET
+        ---help---
+                Parameter that will be passed to board_reset() by when an
+                assertion occurs.  This may be used by board_reset()
+                implementations to handle the reset differently for the
+                case of a crash.
+
+config BOARDCTL_RESET_CAUSE
+        bool "Return reset cause"
+        default n
+        depends on ARCH_HAVE_RESET
+        ---help---
+                Enables support for the BOARDIOC_RESET_CAUSE boardctl() command.
+                Architecture specific logic must provide the board_reset_cause()
+                interface.
+
+config BOARDCTL_UNIQUEID
+        bool "Return board unique ID"
+        default n
+        ---help---
+                Enables support for the BOARDIOC_UNIQUEID boardctl() command.
+                Architecture specific logic must provide the board_uniqueid()
+                interface.
+
+config BOARDCTL_UNIQUEID_SIZE
+        int "Size of the board unique ID (bytes)"
+        default 16
+        depends on BOARDCTL_UNIQUEID
+        ---help---
+                Provides the size of the memory buffer that must be provided by the
+                caller of board_uniqueid() in which to receive the board unique ID.
+
+config BOARDCTL_UNIQUEKEY
+        bool "Return board unique KEY"
+        default n
+        ---help---
+                Enables support for the BOARDIOC_UNIQUEKEY boardctl() command.
+                Architecture specific logic must provide the board_uniquekey()
+                interface.
+
+config BOARDCTL_UNIQUEKEY_SIZE
+        int "Size of the board unique KEY (bytes)"
+        default 16
+        depends on BOARDCTL_UNIQUEKEY
+        ---help---
+                Provides the size of the memory buffer that must be provided by the
+                caller of board_uniquekey() in which to receive the board unique KEY.
+
+config BOARDCTL_SWITCH_BOOT
+        bool "Enable switch boot system support"
+        default n
+        ---help---
+                BOARDIOC_SWITCH_BOOT is required to communicate the boot partition
+                from userspace (OTA subsystem) to board for A/B boot or single boot
+                case. It can be used to change the system boot behavior. For instance,
+                once a firmware updated successfully, this boardctl can be used to
+                modify FLASH bank selection.
+
+config BOARDCTL_BOOT_IMAGE
+        bool "Boot a new application firmware image"
+        default n
+        ---help---
+                Boot a new application firmware image.
+                Architecture-specific logic must provide the board_boot_image()
+                interface for executing the required actions for booting a new
+                application firmware image (e.g. deinitialize peripherals, load the
+                Program Counter register with the application firmware image entry
+                point address).
+
+config BOARDCTL_MKRD
+        bool "Enable application space creation of RAM disks"
+        default n
+        select DRVR_MKRD
+        depends on !DISABLE_MOUNTPOINT
+        ---help---
+                Enables support for the BOARDIOC_MKRD boardctl() command.
+
+config BOARDCTL_ROMDISK
+        bool "Enable application space creation of ROM disks"
+        default n
+        depends on !DISABLE_MOUNTPOINT
+        ---help---
+                Enables support for the BOARDIOC_MKRD boardctl() command.
+
+config BOARDCTL_APP_SYMTAB
+        bool "Enable application symbol table interfaces"
+        default n
+        ---help---
+                Enables support for the BOARDIOC_APP_SYMTAB boardctl() command.
+
+config BOARDCTL_OS_SYMTAB
+        bool "Enable kernel module symbol table interfaces"
+        default n
+        depends on MODULE
+        ---help---
+                Enables support for the BOARDIOC_OS_SYMTAB boardctl() command.
+
+config BOARDCTL_USBDEVCTRL
+        bool "Enable USB device controls"
+        default n
+        depends on USBDEV
+        ---help---
+                Enables support for the BOARDIOC_USBDEV_CONTROL boardctl() command.
+
+config BOARDCTL_TESTSET
+        bool "Architecture-specific test/set operation"
+        default n
+        ---help---
+                Enables support for the BOARDIOC_SPINLOCK boardctl() command.
+                Architecture specific logic must provide up_testset() interface.
+
+config BOARDCTL_IOCTL
+        bool "Board-specific boardctl() commands"
+        default n
+        ---help---
+                Enables support for board-specific boardctl() commands.
+                Architecture specific logic must provide board_ioctl() interface.
+
+endif # BOARDCTL
+
+config BOARD_USBDEV_SERIALSTR
+        bool
+        default n
+

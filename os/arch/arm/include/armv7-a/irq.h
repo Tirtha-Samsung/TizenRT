@@ -209,7 +209,7 @@
 #define REG_LR              REG_R14
 #define REG_PC              REG_R15
 
-/* The PIC register is usually R10. It can be R9 is stack checking is enabled
+/* The PIC register is usually R10. It can be R9 if stack checking is enabled
  * or if the user changes it with -mpic-register on the GCC command line.
  */
 
@@ -306,8 +306,8 @@ struct xcptcontext
 #ifdef CONFIG_ARCH_ADDRENV
 #ifdef CONFIG_ARCH_STACK_DYNAMIC
   /* This array holds the physical address of the level 2 page table used
-   * to map the thread's stack memory.  This array will be initially of
-   * zeroed and would be back-up up with pages during page fault exception
+   * to map the thread's stack memory.  This array will initially be of Zeroes 
+   * and would be backed-up up with pages during page fault exception
    * handling to support dynamically sized stacks for each thread.
    */
 

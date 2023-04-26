@@ -48,7 +48,6 @@
 #include <debug.h>
 
 #include <tinyara/irq.h>
-//#include <tinyara/tls.h>
 #include <tinyara/arch.h>
 #include <tinyara/board.h>
 #include <tinyara/syslog/syslog.h>

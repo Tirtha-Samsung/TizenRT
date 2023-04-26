@@ -70,6 +70,7 @@
 #include <tinyara/compiler.h>
 #include <tinyara/config.h>
 #include <stdint.h>
+
 extern char assert_info_str[CONFIG_STDIO_BUFFER_SIZE];
 /****************************************************************************
  * Pre-processor Definitions

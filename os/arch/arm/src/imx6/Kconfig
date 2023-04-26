@@ -90,6 +90,7 @@ config IMX6_UART1
 	default n
 	select UART1_SERIALDRIVER
 	select ARCH_HAVE_SERIAL_TERMIOS
+	select ARCH_HAVE_UART1
 
 config IMX6_UART2
 	bool "UART2"

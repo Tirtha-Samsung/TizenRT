@@ -120,7 +120,11 @@ int main(int argc, char **argv, char **envp)
 	printf("/* The correct way to disable RR scheduling is to set the\n");
 	printf(" * timeslice to zero.\n");
 	printf(" */\n\n");
-	printf("#define CONFIG_RAM_END (CONFIG_RAM_START + CONFIG_RAM_SIZE)\n\n");
+//	printf("#if defined(CONFIG_IDENTITY_TEXTMAP)\n");
+//	printf("#define CONFIG_RAM_START CONFIG_RAM_VSTART\n");
+//	printf("#define CONFIG_RAM_SIZE 1073741824\n");
+//	printf("#endif\n");
+	printf("#define CONFIG_RAM_END (CONFIG_RAM_KREGIONx_START + CONFIG_RAM_KREGIONx_SIZE)\n\n");
 	printf("#ifndef CONFIG_RR_INTERVAL\n");
 	printf("# define CONFIG_RR_INTERVAL 0\n");
 	printf("#endif\n\n");

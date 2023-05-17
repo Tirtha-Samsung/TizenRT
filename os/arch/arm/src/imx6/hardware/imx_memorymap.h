@@ -767,7 +767,7 @@
   /* The "primary" RAM is the SDRAM or SRAM used for .bss and .data */
 
 #  define TIZENRT_RAM_VADDR        (CONFIG_RAM_VSTART & 0xfff00000)
-#  define TIZENRT_RAM_PADDR        (CONFIG_RAM_START & 0xfff00000)
+#  define TIZENRT_RAM_PADDR        (CONFIG_RAM_KREGIONx_START & 0xfff00000)
 #  define TIZENRT_RAM_PEND         ((CONFIG_RAM_END + 0x000fffff) & 0xfff00000)
 #  define TIZENRT_RAM_SIZE         (TIZENRT_RAM_PEND - TIZENRT_RAM_PADDR)
 
@@ -784,7 +784,7 @@
    */
 
 #  define TIZENRT_TEXT_VADDR       (CONFIG_RAM_VSTART & 0xfff00000)
-#  define TIZENRT_TEXT_PADDR       (CONFIG_RAM_START & 0xfff00000)
+#  define TIZENRT_TEXT_PADDR       (CONFIG_RAM_KREGIONx_START & 0xfff00000)
 #  define TIZENRT_TEXT_PEND        ((CONFIG_RAM_END + 0x000fffff) & 0xfff00000)
 #  define TIZENRT_TEXT_SIZE        (TIZENRT_TEXT_PEND - TIZENRT_TEXT_PADDR)
 

@@ -777,6 +777,10 @@ endchoice
 
 menu "Boot Memory Configuration"
 
+config IDENTITY_TEXTMAP
+	int
+	default 1
+if 0
 config RAM_START
         hex "Primary RAM start address (physical)"
         default 0x0
@@ -785,7 +789,7 @@ config RAM_START
                 refers to the RAM that you link program code into.  If program code
                 does not execute out of RAM but from FLASH, then you may designate
                 any block of RAM as "primary."
-
+endif
 config RAM_VSTART
 	hex "Primary RAM start address (virtual)"
 	default 0x0
@@ -795,7 +799,7 @@ config RAM_VSTART
 		refers to the RAM that you link program code into.  If program code
 		does not execute out of RAM but from FLASH, then you may designate
 		any block of RAM as "primary."
-
+if 0
 config RAM_SIZE
         int "Primary RAM size"
         default 0
@@ -804,9 +808,9 @@ config RAM_SIZE
                 refers to the RAM that you link program code into.  If program code
                 does not execute out of RAM but from FLASH, then you may designate
                 any block of RAM as "primary."
-
+endif
 config RAM_KREGIONx_START
-	string "An address or list of start address for kernel RAM region"
+	hex "An address or list of start address for kernel RAM region"
 	default "0x00000000,"
 	---help---
 		The address or address list of the RAM regions.
@@ -820,7 +824,7 @@ config RAM_KREGIONx_START
 		i.e. "0x02000000,0x4000000"
 
 config RAM_KREGIONx_SIZE
-	string "A size or list of size for kernel RAM region"
+	hex "A size or list of size for kernel RAM region"
 	default "0,"
 	---help---
 		The size list of RAM region.

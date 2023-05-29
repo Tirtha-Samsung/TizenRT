@@ -54,6 +54,7 @@
 #include "group/group.h"
 #include "gic.h"
 
+int g_irq_nums[3] = {0}; /* Array to store the last three interrupt numbers */
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -69,6 +70,9 @@
 
 uint32_t *arm_doirq(int irq, uint32_t *regs)
 {
+	g_irq_nums[2] = g_irq_nums[1];
+	g_irq_nums[1] = g_irq_nums[0];
+	g_irq_nums[0] = irq;
   board_autoled_on(LED_INIRQ);
 #ifdef CONFIG_SUPPRESS_INTERRUPTS
   PANIC();
@@ -113,7 +117,10 @@ uint32_t *arm_doirq(int irq, uint32_t *regs)
   regs         = (uint32_t *)CURRENT_REGS;
   CURRENT_REGS = NULL;
 #endif
-
+/* Reset the interrupt number values */
+	g_irq_nums[0] = g_irq_nums[1];
+	g_irq_nums[1] = g_irq_nums[2];
+	g_irq_nums[2] = 0;
   board_autoled_off(LED_INIRQ);
   return regs;
 }

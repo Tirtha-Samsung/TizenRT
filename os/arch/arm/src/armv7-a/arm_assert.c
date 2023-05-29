@@ -58,10 +58,12 @@
 #include "sched/sched.h"
 #include "irq/irq.h"
 #include "arm_internal.h"
+#include "nvic.h"
 
 /****************************************************************************
  * Pre-processor Definitions
  ****************************************************************************/
+extern int g_irq_nums[3];
 char assert_info_str[CONFIG_STDIO_BUFFER_SIZE] = {'\0', };
 bool abort_mode = false;
 
@@ -400,8 +402,133 @@ static void arm_dumpstate(void)
 {
   struct tcb_s *rtcb = this_task();
   uint32_t sp = up_getsp();
+  uint32_t stackbase = 0;
+  uint32_t stacksize = 0;
+#if CONFIG_ARCH_INTERRUPTSTACK > 3
+  uint32_t istackbase = 0;
+  uint32_t istacksize = 0;
+#endif
+  uint32_t nestirqstkbase = 0;
+  uint32_t nestirqstksize = 0;
+  uint8_t irq_num;
+  
+  /* Get the limits for each type of stack */
 
-  /* Show back trace */
+  stackbase = (uint32_t)rtcb->adj_stack_ptr;
+  stacksize = (uint32_t)rtcb->adj_stack_size;
+
+#ifdef CONFIG_ARCH_NESTED_IRQ_STACK_SIZE
+	nestirqstkbase = (uint32_t)&g_nestedirqstkbase;
+	nestirqstksize = (CONFIG_ARCH_NESTED_IRQ_STACK_SIZE & ~3);
+#endif
+	bool is_irq_assert = false;
+	bool is_sp_corrupt = false;
+
+	/* Check if the assert location is in user thread or IRQ handler.
+	 * If the irq_num is lesser than NVIC_IRQ_USAGEFAULT, then it is
+	 * a fault and not an irq.
+	 */
+	if (g_irq_nums[2] && (g_irq_nums[0] <= NVIC_IRQ_USAGEFAULT)) {
+		/* Assert in nested irq */
+		irq_num = 1;
+		is_irq_assert = true;
+		lldbg("Code asserted in nested IRQ state!\n");
+	} else if (g_irq_nums[1] && (g_irq_nums[0] > NVIC_IRQ_USAGEFAULT)) {
+		/* Assert in nested irq */
+		irq_num = 0;
+		is_irq_assert = true;
+		lldbg("Code asserted in nested IRQ state!\n");
+	} else if (g_irq_nums[1] && (g_irq_nums[0] <= NVIC_IRQ_USAGEFAULT)) {
+		/* Assert in irq */
+		irq_num = 1;
+		is_irq_assert = true;
+		lldbg("Code asserted in IRQ state!\n");
+	} else if (g_irq_nums[0] > NVIC_IRQ_USAGEFAULT) {
+		/* Assert in irq */
+		irq_num = 0;
+		is_irq_assert = true;
+		lldbg("Code asserted in IRQ state!\n");
+	} else {
+		/* Assert in user thread */
+		lldbg("Code asserted in normal thread!\n");
+		if (CURRENT_REGS) {
+			/* If assert is in user thread, but current_regs is not NULL,
+			 * it means that assert happened due to a fault. So, we want to
+			 * reset the sp to the value just before the fault happened
+			 */
+			sp = CURRENT_REGS[REG_R13];
+		}
+	}
+  
+/* Print IRQ handler details if required */
+
+	if (is_irq_assert) {
+		lldbg("IRQ num: %d\n", g_irq_nums[irq_num]);
+		lldbg("IRQ handler: %08x \n", g_irqvector[g_irq_nums[irq_num]].handler);
+#ifdef CONFIG_DEBUG_IRQ_INFO
+		lldbg("IRQ name: %s \n", g_irqvector[g_irq_nums[irq_num]].irq_name);
+#endif
+		if ((sp <= nestirqstkbase) && (sp > (nestirqstkbase - nestirqstksize))) {
+			stackbase = nestirqstkbase;
+			stacksize = nestirqstksize;
+			lldbg("Current SP is Nested IRQ SP: %08x\n", sp);
+			lldbg("Nested IRQ stack:\n");
+		} else
+#if CONFIG_ARCH_INTERRUPTSTACK > 3
+		if ((sp <= istackbase) && (sp > (istackbase - istacksize))) {
+			stackbase = istackbase;
+			stacksize = istacksize;
+			lldbg("Current SP is IRQ SP: %08x\n", sp);
+			lldbg("IRQ stack:\n");
+		} else {
+			is_sp_corrupt = true;
+		}
+#else
+		if ((sp <= stackbase) && (sp > (stackbase - stacksize))) {
+			lldbg("Current SP is User Thread SP: %08x\n", sp);
+			lldbg("User stack:\n");
+		} else {
+			is_sp_corrupt = true;
+		}
+#endif
+	} else if ((sp <= stackbase) && (sp > (stackbase - stacksize))) {
+		lldbg("Current SP is User Thread SP: %08x\n", sp);
+		lldbg("User stack:\n");
+	} else {
+		is_sp_corrupt = true;
+	}
+
+
+	if (is_sp_corrupt) {
+		lldbg("ERROR: Stack pointer is not within any of the allocated stack\n");
+		lldbg("Wrong Stack pointer %08x: %08x %08x %08x %08x %08x %08x %08x %08x\n",
+		sp, *((uint32_t *)sp + 0), *((uint32_t *)sp + 1), *((uint32_t *)sp + 2), ((uint32_t *)sp + 3),
+		*((uint32_t *)sp + 4), ((uint32_t *)sp + 5), ((uint32_t *)sp + 6), ((uint32_t *)sp + 7));
+
+		/* Since SP is corrupted, we dont know which stack was being used.
+		 * So, dump all the available stacks.
+		 */
+#ifdef CONFIG_ARCH_NESTED_IRQ_STACK_SIZE
+		lldbg("Nested IRQ stack dump:\n");
+		arm_stackdump(nestirqstkbase - nestirqstksize + 1, nestirqstkbase);
+#endif
+#if CONFIG_ARCH_INTERRUPTSTACK > 3
+		lldbg("IRQ stack dump:\n");
+		arm_stackdump(istackbase - istacksize + 1, istackbase);
+#endif
+		lldbg("User thread stack dump:\n");
+		arm_stackdump(stackbase - stacksize + 1, stackbase);
+	} else {
+		/* Dump the stack region which contains the current stack pointer */
+		lldbg("  base: %08x\n", stackbase);
+		lldbg("  size: %08x\n", stacksize);
+#ifdef CONFIG_STACK_COLORATION
+		lldbg("  used: %08x\n", up_check_assertstack((uintptr_t)(stackbase - stacksize), stacksize));
+#endif
+		arm_stackdump(sp, stackbase);
+	}
+
+   /* Show back trace */
 
 #ifdef CONFIG_SCHED_BACKTRACE
   sched_dumpstack(rtcb->pid);
@@ -553,8 +680,17 @@ void up_assert(FAR const uint8_t *filename, int linenum)
 #endif
         );
 
+  /* Print the extra arguments (if any) from ASSERT_INFO macro */
+	if (assert_info_str[0]) {
+		lldbg("%s\n", assert_info_str);
+	}
+
 #ifdef CONFIG_ARCH_STACKDUMP
   arm_dumpstate();
+#endif
+
+#ifdef CONFIG_APP_BINARY_SEPARATION
+	elf_show_all_bin_section_addr();
 #endif
 
   /* Flush any buffered SYSLOG data (from the above) */

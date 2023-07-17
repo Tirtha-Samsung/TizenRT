@@ -220,7 +220,7 @@ In addition to the SECTION information, add the following variables as well to m
 1. `_sbss`: Start of .bss section
 2. `_ebss`: End+1 of .bss section
 3. `_sidle_stack`: Start of idle stack
-4. `__sint_heap_start`: Start of heap in internal RAM region
+4. `__sint_heap`: Start of heap in internal RAM region
 5. `__sext_heap_start`: Start of heap in external RAM region
 
 For example,  
@@ -237,7 +237,7 @@ For example,
 		_sidle_stack = ABSOLUTE(.);
 		. = . + CONFIG_IDLETHREAD_STACKSIZE ;
 		/* Heap start address in internal RAM */
-		_sint_heap_start = ABSOLUTE(.);
+		_sint_heap = ABSOLUTE(.);
 	} > sram
 ```
 2. Idle thread stack and internal heap regions should be set at a different region (other than end of bss) as per the memory layout (`build/configs/rtl8720e/scripts/rlx8720e_img2.ld`):
@@ -257,7 +257,7 @@ For example,
 	} > KM4_BD_PSRAM
 
 	/* Heap start address in internal RAM */
-	_sint_heap_start = ABSOLUTE(ORIGIN(KM4_HEAP_EXT));
+	_sint_heap = ABSOLUTE(ORIGIN(KM4_HEAP_EXT));
 	_sidle_stack = ABSOLUTE(ORIGIN(KM4_MSP_RAM_NS) + LENGTH(KM4_MSP_RAM_NS)) - CONFIG_IDLETHREAD_STACKSIZE;
 ```
 

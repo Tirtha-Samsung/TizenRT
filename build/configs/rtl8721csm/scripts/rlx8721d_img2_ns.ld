@@ -307,7 +307,7 @@ SECTIONS
 		end = .;
 		_ebss = ABSOLUTE(.);
 		/* Heap start address in internal RAM */
-		_sint_heap_start = ABSOLUTE(.);
+		_sint_heap = ABSOLUTE(.);
 	} > BD_RAM_NS
 
 

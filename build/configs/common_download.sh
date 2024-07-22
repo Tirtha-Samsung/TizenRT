@@ -231,6 +231,7 @@ function get_partition_sizes()
 
 download_specific_partition()
 {
+	FLAG=$1	
 	TARGET=$1
 	if [[ ${TARGET} == "ota" || ${TARGET} == "OTA" ]];then
 		TARGET="kernel"
@@ -242,7 +243,9 @@ download_specific_partition()
 		dwld_help
 		exit 1
 	fi
-
+	if [[ ${TARGET} == "kernel" || ${TARGET} == "KERNEL" ]];then
+		FLAG=${BOOTPARAM}.bin
+	fi
 	# Get a filename and Download a file
 	echo ""
 	echo "============================="
@@ -258,7 +261,7 @@ download_specific_partition()
 		echo "No corresponding binary for the partition ${parts[$partidx]}"
 		echo "Download $exe_name FAILED!"
 	else
-		board_download $TTYDEV ${offsets[$partidx]} ${exe_name} ${sizes[partidx]} ${parts[$partidx]}
+		board_download $TTYDEV ${offsets[$partidx]} ${exe_name} ${sizes[partidx]} ${parts[$partidx]} $FLAG
 		echo ""
 		echo "Download $exe_name COMPLETE!"
 	fi
@@ -272,7 +275,8 @@ download_all()
 	found_app2=false
 	found_common=false
 	found_resource=false
-	
+
+	FLAG=0	
 	for partidx in ${!parts[@]}; do
 
 		if [[ "${CONFIG_APP_BINARY_SEPARATION}" != "y" ]];then
@@ -332,7 +336,7 @@ download_all()
 			echo "Downloading ${parts[$partidx]} binary"
 			echo "=========================="
 		fi
-		board_download $TTYDEV ${offsets[$partidx]} ${exe_name} ${sizes[partidx]} ${parts[$partidx]}
+		board_download $TTYDEV ${offsets[$partidx]} ${exe_name} ${sizes[partidx]} ${parts[$partidx]} $FLAG
 	done
 	echo ""
 	echo "Download COMPLETE!"

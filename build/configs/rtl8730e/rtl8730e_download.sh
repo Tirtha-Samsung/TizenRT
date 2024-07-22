@@ -116,6 +116,8 @@ function board_download()
 	else
 		if [ "$USB_DOWNLOAD" -eq "0" ]; then
 			#echo "UART download"
+			echo "$3" >> setting.txt
+			echo "$2" >> setting.txt
 			./upload_image_tool_linux "download" $1 1 $2 $3
 		fi
 		if [ "$USB_DOWNLOAD" -eq "1" ]; then
@@ -123,7 +125,17 @@ function board_download()
 			#echo "Save info to USB_download_setting.txt"
 			echo "$3" >> USB_download_setting.txt
 			echo "$2" >> USB_download_setting.txt
-			if [ "$3" == "$LAST_IMAGE" ]; then
+			if [ $FLAG == 0 ] && [ "$3" == "$LAST_IMAGE" ]; then
+				echo ""
+				echo "==================================="
+				echo "Start USB download in Flash"
+				echo $(date)
+				echo "==================================="
+				./upload_image_tool_linux "download" $1
+				echo "Complete USB download"
+				echo $(date)
+			fi
+			if [ $FLAG != 0 ] && [ "$3" == "$FLAG" ]; then
 				echo ""
 				echo "==================================="
 				echo "Start USB download in Flash"

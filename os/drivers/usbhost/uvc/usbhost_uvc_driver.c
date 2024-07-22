@@ -20,6 +20,7 @@
  ****************************************************************************/
 
 #include <tinyara/config.h>
+#include <tinyara/common_logs/common_logs.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1637,7 +1638,7 @@ int uvc_scan_device(FAR uvc_state_t *dev)
 
 		chain = kmm_zalloc(sizeof(*chain));
 		if (chain == NULL) {
-			udbg("Memory allocation failed!!\n");
+			udbg("%s\n", clog_message_str[CMN_LOG_ALLOC_FAIL]);
 			return -ENOMEM;
 		}
 

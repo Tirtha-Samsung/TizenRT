@@ -30,7 +30,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#define READ_BUFFER_SIZE	1024	/* user configurable read size */
+#define READ_BUFFER_SIZE       4096    /* user configurable read size */
 
 /****************************************************************************
  * log_dump_main
@@ -44,6 +44,9 @@ int log_dump_main(int argc, char *argv[])
 {
 	int ret = 1;
 	char buf[READ_BUFFER_SIZE];
+        char uncompressed[READ_BUFFER_SIZE];
+        int count = 0;
+        int total = 0;
 	int fd = OPEN_LOGDUMP();
 
 	if (fd < 0) {
@@ -76,17 +79,41 @@ int log_dump_main(int argc, char *argv[])
 		goto errout;
 	}
 
+	int fd1 = open("/mnt/logdump.txt", O_WRONLY | O_CREAT | O_APPEND,0666);
+	if (fd1<0)
+	{
+		printf("Failed to open file");
+		goto errout;
+	}
 	while (ret > 0) {
-		ret = READ_LOGDUMP(fd, buf, sizeof(buf));
-		for (int i = 0; i < ret; i++) {
-			printf("%c", buf[i]);
-		}
+                ret = READ_LOGDUMP(fd, buf, 4);
+                total += 4;
+                if (ret <= 0) break;
+                int size = (buf[0] - '0') * 1000 + (buf[1] - '0') * 100 + (buf[2] - '0') * 10 + (buf[3] - '0');
+                printf("\n\n######################## %d node size : %d ####################\n\n", count, size);
+                dprintf(fd1,"\n\n######################## %d node size : %d ####################\n\n", count, size);
+                count++;
+                ret = READ_LOGDUMP(fd, buf, size);
+                total += ret;
+                int writesize = 4096;
+                ret = mz_uncompress(uncompressed, &writesize, buf, ret);
+                ret = writesize;
+                for (int i = 0; i < ret; i++) {
+                        printf("%c", uncompressed[i]);
+                        dprintf(fd1,"%c", uncompressed[i]);
+                }
 	}
 
         printf("\n*********************   LOG DUMP END  ***********************\n");
+        dprintf(fd1,"\n*********************   LOG DUMP END  ***********************\n");
+        close(fd1);
 
+       if (START_LOGDUMP_SAVE(fd) < 0) {
+                printf("Failed to start log dump, errno %d\n", get_errno());
+                goto errout;
+        }
 	CLOSE_LOGDUMP(fd);
-
+	PANIC();
 	return 0;
 
 errout:
